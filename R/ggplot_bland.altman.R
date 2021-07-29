@@ -1,3 +1,5 @@
+#' Generate a Bland-Altman plot
+#'
 #' @importFrom blandr blandr.draw
 #' @export
 ggplot_bland.altman <- function(method1, method2, fill.colors = c("steelblue3", "gray85"),
