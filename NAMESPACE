@@ -2,4 +2,5 @@
 
 export(geom_flat_violin)
 export(ggplot_bland.altman)
+export(ggplot_scatter_compare)
 importFrom(blandr,blandr.draw)
