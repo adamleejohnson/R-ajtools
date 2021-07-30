@@ -12,11 +12,13 @@ ggplot_scatter_compare(
   label.y,
   title = "Title",
   units = NULL,
-  lim = c(0, 100),
+  lim = NULL,
   line.color = "blue",
   line.size = 0.7,
   point.size = 0.7,
   title.size = 12,
+  ticks.breaks = NULL,
+  ticks.minor_breaks = NULL,
   ...
 )
 }
@@ -35,7 +37,7 @@ ggplot_scatter_compare(
 
 \item{units}{Units to append to axes (default = NULL)}
 
-\item{lim}{Axes limits to apply to both x and y axes (the plot should be square)}
+\item{lim}{Axes limits in form of 2-vector to apply to both x and y axes (the plot should be square)}
 
 \item{line.color}{Color of the fit line (default = "blue")}
 
@@ -44,6 +46,10 @@ ggplot_scatter_compare(
 \item{point.size}{Scatter point size (default = 0.7)}
 
 \item{title.size}{Title font size (default = 12)}
+
+\item{ticks.breaks}{Vector of break points to use on the axes}
+
+\item{ticks.minor_breaks}{Vector of minor break points to use on the axes}
 
 \item{...}{Additional theme parameters}
 }
