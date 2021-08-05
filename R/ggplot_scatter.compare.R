@@ -20,7 +20,7 @@
 #'
 #' @return
 #' @export
-ggplot_scatter_compare <-
+ggplot_scatter.compare <-
   function(data,
            data.x,
            data.y,
@@ -39,6 +39,7 @@ ggplot_scatter_compare <-
     ggplot2::ggplot(data) +
       ggplot2::aes_string(x = data.x, y = data.y) +
       ggplot2::geom_smooth(
+        formula = y ~ x,
         method = "lm",
         se = TRUE,
         color = line.color,
