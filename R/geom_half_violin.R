@@ -1,8 +1,18 @@
 #' Half-violin plot
 #' From https://www.data-to-viz.com/caveat/boxplot.html
 #'
+#' @param mapping mapping
+#' @param data data
+#' @param stat stat = "ydensity"
+#' @param position position = "dodge"
+#' @param trim trim = TRUE
+#' @param scale scale = "area"
+#' @param show.legend show.legend = NA
+#' @param inherit.aes inherit.aes = TRUE
+#' @param ... other ggplot layer params
+#'
 #' @export
-geom_flat_violin <-
+geom_half_violin <-
   function(mapping = NULL,
            data = NULL,
            stat = "ydensity",
@@ -16,7 +26,7 @@ geom_flat_violin <-
       data = data,
       mapping = mapping,
       stat = stat,
-      geom = GeomFlatViolin,
+      geom = GeomHalfViolin,
       position = position,
       show.legend = show.legend,
       inherit.aes = inherit.aes,
@@ -27,15 +37,13 @@ geom_flat_violin <-
   }
 
 "%||%" <- function(a, b) {
-  if (!is.null(a))
-    a
-  else
-    b
+  if (!is.null(a)) a
+  else b
 }
 
-GeomFlatViolin <-
+GeomHalfViolin <-
   ggplot2::ggproto(
-    "GeomFlatViolin",
+    "GeomHalfViolin",
     ggplot2::Geom,
     setup_data = function(data, params) {
 
@@ -67,7 +75,7 @@ GeomFlatViolin <-
       newdata <- rbind(newdata, newdata[1,])
 
       ggplot2:::ggname(
-        "geom_flat_violin",
+        "geom_half_violin",
         ggplot2::GeomPolygon$draw_panel(newdata, panel_scales, coord)
       )
     },
