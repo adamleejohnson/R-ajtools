@@ -9,7 +9,7 @@ latex_to_html_characters <- c(
   "&le;" = "\\\\leq",
   "&lt;" = "\\<",
   "&gt;" = "\\>",
-  "&plus;" = "\\+",
+  "&#43;" = "\\+",
   "&minus;" = "\\-",
   "&ge;" = "\\\\geq",
   "&sup2;" = "\\^2",
@@ -57,11 +57,18 @@ latex_to_html_characters <- c(
 )
 
 #' Convert latex string to html
-#' @param v input string
-#' @return
+#' @param input input string
 #' @export
 tex_to_html <- function(input) {
   sapply(input, simplify = T, USE.NAMES = F, function(v) {
+    # convert symbols
+    v <- Reduce(
+      function(x,y) {
+        from <- paste0("(\\$[^\\$]*)(",y,")([^\\$]*\\$)")
+        to <- paste0("\\1",names(latex_to_html_characters)[which(latex_to_html_characters == y)][1],"\\3")
+        gsub(from, to, x, perl = T)
+      }, latex_to_html_characters, v)
+
     # repeat until string is unchanged:
     repeat {
       s <- v
@@ -69,40 +76,29 @@ tex_to_html <- function(input) {
       # remove whitespace around \n and replace with <br>
       s <- gsub("[ ]*\\n[ ]*", "<br>", s, perl = T)
 
-      # \frac{...}{...} -> (.../...)
-      s <- gsub("(\\$[^\\$]*)\\\\frac\\{([^\\$\\}]*)\\}\\{([^\\$\\}]*)\\}([^\\$]*\\$)", "\\1\\(\\2/\\3\\)\\4", s, perl = T)
-
       # \sqrt{...} -> &radic(...);
-      s <- gsub("(\\$[^\\$]*)\\\\sqrt\\{([^\\$\\}]+)\\}([^\\$]*\\$)", "\\1&radic;\\(\\2\\)\\3", s, perl = T)
-
-      # remove general latex functions and leave only arguments
-      s <- gsub("(\\$[^\\$]*)\\\\[a-zA-Z]+\\{([^\\$\\}]+)\\}([^\\$]*\\$)", "\\1\\2\\3", s, perl = T)
-
-      # convert symbols
-      s <- Reduce(
-        function(x,y) {
-          from <- paste0("(\\$[^\\$]*)(",y,")([^\\$]*\\$)")
-          to <- paste0("\\1",names(latex_to_html_characters)[which(latex_to_html_characters == y)][1],"\\3")
-          gsub(from, to, x, perl = T)
-        },
-        latex_to_html_characters,
-        s
-      )
-
-      # break condition
-      if (s == v) break
-      else v <- s
-    }
-
-    # do again for html tags (can't do this in the first loop because it will convert the '<' and '>' characters)
-    repeat {
-      s <- v
+      s <- gsub("(\\$[^\\$]*)\\\\sqrt\\{([^\\$\\}]+)\\}([^\\$]*\\$)", "\\1&radic;<span style=\"text-decoration: overline\">\\2</span>\\3", s, perl = T)
 
       # ^{...} -> <sup>...</sup>
       s <- gsub("(\\$[^\\$]*)\\^\\{([^\\$\\}]+)\\}([^\\$]*\\$)", "\\1<sup>\\2</sup>\\3", s, perl = T)
 
       # _{...} -> <sub>...</sub>
       s <- gsub("(\\$[^\\$]*)_\\{([^\\$\\}]+)\\}([^\\$]*\\$)", "\\1<sub>\\2</sub>\\3", s, perl = T)
+
+      # \frac{...}{...} -> <sup>...</sup>&frasl;<sub>...</sub>
+      s <- gsub("(\\$[^\\$]*)\\\\frac\\{([^\\$\\}]*)\\}\\{([^\\$\\}]*)\\}([^\\$]*\\$)", "\\1<sup>\\2</sup>&frasl;<sub>\\3</sub>\\4", s, perl = T)
+
+      # break condition
+      if (s == v) break
+      else v <- s
+    }
+
+    # do again for general functions
+    repeat {
+      s <- v
+
+      # remove general latex functions and leave only arguments
+      s <- gsub("(\\$[^\\$]*)\\\\[a-zA-Z]+\\{([^\\$\\}]+)\\}([^\\$]*\\$)", "\\1\\2\\3", s, perl = T)
 
       # break condition
       if (s == v) break
@@ -127,29 +123,59 @@ tex_to_html <- function(input) {
 #'
 #' @param df data frame
 #' @param ... Parameters to pass to kableExtra::kbl
+#' @inheritParams kableExtra::linebreak
 #' @inheritParams kableExtra::kbl
+#' @inheritDotParams kableExtra::kbl
 #'
-#' @importFrom dplyr mutate across
+#' @importFrom dplyr mutate across "%>%"
 #' @importFrom tidyselect everything
 #'
 #' @export
-kbl_escape <- function(df, row.names = NA,
-                       col.names = NA, align, caption = NULL, label = NULL, format.args = list(),
+kbl.escape <- function(df, row.names = NA,
+                       col.names = NA, align = "c", caption = NULL, label = NULL, format.args = list(),
                        escape = TRUE, table.attr = "", booktabs = FALSE, longtable = FALSE,
-                       valign = "t", position = "", centering = TRUE, ...) {
+                       valign = "t", position = "", centering = TRUE, linebreaker = "\n", ...) {
   df %>%
     as.data.frame() %>% {
     if (knitr::is_latex_output()) {
-      mutate(., across(everything(), ~kableExtra::linebreak(.x))) %>%
-      `colnames<-`(kableExtra::linebreak(colnames(.))) %>%
-      `rownames<-`(kableExtra::linebreak(rownames(.))) %>%
-      kableExtra::kbl("latex", booktabs = T, escape = F, ...)
+      mutate(., across(everything(), ~kableExtra::linebreak(.x, align = align, linebreaker = linebreaker))) %>%
+      `colnames<-`(kableExtra::linebreak(colnames(.), align = align, linebreaker = linebreaker)) %>%
+      `rownames<-`(kableExtra::linebreak(rownames(.), align = align, linebreaker = linebreaker)) %>%
+      kableExtra::kbl("latex",
+          booktabs = T,
+          escape = F,
+          col.names = col.names,
+          align = align,
+          caption = caption,
+          label = label,
+          format.args = format.args,
+          table.attr = table.attr,
+          longtable = longtable,
+          valign = valign,
+          position = position,
+          centering = centering,
+          ...
+        )
     }
     else {
       mutate(., across(everything(), tex_to_html)) %>%
       `colnames<-`(tex_to_html(colnames(.))) %>%
       `rownames<-`(tex_to_html(rownames(.))) %>%
-      kableExtra::kbl("html", booktabs = T, escape = F, ...)
+      kableExtra::kbl("html",
+          booktabs = T,
+          escape = F,
+          col.names = col.names,
+          align = align,
+          caption = caption,
+          label = label,
+          format.args = format.args,
+          table.attr = table.attr,
+          longtable = longtable,
+          valign = valign,
+          position = position,
+          centering = centering,
+          ...
+        )
     }
   }
 }
