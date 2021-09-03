@@ -18,7 +18,6 @@
 #' @param ticks.minor_breaks Vector of minor break points to use on the axes
 #' @param ... Additional theme parameters
 #'
-#' @return
 #' @export
 ggplot_scatter.compare <-
   function(data,
@@ -26,9 +25,9 @@ ggplot_scatter.compare <-
            data.y,
            label.x,
            label.y,
-           title = "Title",
-           units = NULL,
-           lim = NULL,
+           title,
+           units,
+           lim,
            line.color = "blue",
            line.size = 0.7,
            point.size = 0.7,
@@ -36,6 +35,17 @@ ggplot_scatter.compare <-
            ticks.breaks = NULL,
            ticks.minor_breaks = NULL,
            ...) {
+
+    label.x <- bquote_remask(label.x)
+    label.y <- bquote_remask(label.y)
+    title <- bquote_remask(title)
+
+    if (!missing(units)) {
+      units <- bquote_remask(units)
+      label.x <- bquote_remask(label.x ~ (units))
+      label.y <- bquote_remask(label.y ~ (units))
+    }
+
     ggplot2::ggplot(data) +
       ggplot2::aes_string(x = data.x, y = data.y) +
       ggplot2::geom_smooth(
@@ -47,15 +57,9 @@ ggplot_scatter.compare <-
       ) +
       ggplot2::geom_point(size = point.size) +
       ggplot2::labs(
-        title = paste0(title, ": ", label.y, " vs ", label.x),
-        x = if (is.character(units))
-          paste0(label.x, " (", units, ")")
-        else
-          label.x,
-        y = if (is.character(units))
-          paste0(label.y, " (", units, ")")
-        else
-          label.y,
+        title = title,
+        x = label.x,
+        y = label.y
       ) +
       ggplot2::scale_x_continuous(
         breaks = if (is.null(ticks.breaks)) ggplot2::waiver() else ticks.breaks,

@@ -9,16 +9,16 @@
 #'
 #' @export
 geom_histogram_aj <-
-  function(color = "white",
+  function(mapping = NULL, data = NULL,
+           color = "white",
            fill = "grey25",
            size = 0.4,
            bins = 25,
+           # fill_cutoff = NA,
 
            # defaults
            linetype = 1,
            alpha = NA,
-           mapping = NULL,
-           data = NULL,
            stat = "bin",
            position = "stack",
            binwidth = NULL,
@@ -27,13 +27,14 @@ geom_histogram_aj <-
            show.legend = NA,
            inherit.aes = TRUE,
            ...) {
+
     ggplot2::geom_histogram(
+      mapping = mapping,
+      data = data,
       color = color,
       fill = fill,
       size = size,
       alpha = alpha,
-      data = data,
-      mapping = mapping,
       stat = stat,
       position = position,
       show.legend = show.legend,

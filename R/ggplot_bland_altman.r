@@ -24,11 +24,11 @@
 #' measurement2 <- rnorm(100)
 #'
 #' # Generates a plot, with no optional arguments
-#' ggplot_bland.altman( measurement1 , measurement2 )
+#' ggplot_bland_altman( measurement1 , measurement2 )
 #'
 #' @export
 
-ggplot_bland.altman <- function( method1 ,
+ggplot_bland_altman <- function( method1 ,
                                  method2 ,
                                  method1name = "Method 1" ,
                                  method2name = "Method 2" ,
