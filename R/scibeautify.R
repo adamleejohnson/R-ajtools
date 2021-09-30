@@ -31,11 +31,12 @@ scibeautify <- function(.data,
 
   # if calling scibeautify on a data.frame, pass .cols as a tidyselector and .rows as a row selector
   if (is.data.frame(.data)) {
+    .cols <- enquo(.cols)
     this_call <- match.call()
     this_call[[1]] <- as.name("scibeautify.knit")
     this_call[[".data"]] <- as.name("x")
     fn_call <- function(x) eval(this_call)
-    pos <- tidyselect::eval_select({{ .cols }}, .data)
+    pos <- tidyselect::eval_select(.cols, .data)
     return({
       if (missing(.rows)) dplyr::mutate(.data, across(.cols = pos, .fns = fn_call))
       else ajtools::mutate_rows(.data, .rows, across(.cols = pos, .fns = fn_call))

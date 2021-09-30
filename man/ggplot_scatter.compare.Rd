@@ -53,9 +53,6 @@ ggplot_scatter.compare(
 
 \item{...}{Additional theme parameters}
 }
-\value{
-
-}
 \description{
 Define a scatter plot generator for making comparisons between two different methods
 }

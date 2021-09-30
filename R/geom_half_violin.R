@@ -67,8 +67,8 @@ GeomHalfViolin <-
                         xmaxv = x + violinwidth * (xmax - x))
 
       # Make sure it's sorted properly to draw the outline
-      newdata <- rbind(plyr::arrange(transform(data, x = xminv), y),
-                       plyr::arrange(transform(data, x = xmaxv), -y))
+      newdata <- rbind(dplyr::arrange(transform(data, x = xminv), y),
+                       dplyr::arrange(transform(data, x = xmaxv), -y))
 
       # Close the polygon: set first and last point the same
       # Needed for coord_polar and such
