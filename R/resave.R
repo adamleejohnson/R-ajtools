@@ -10,24 +10,24 @@ resave <- function(...,
                    ascii = FALSE,
                    version = NULL,
                    envir = parent.frame(),
-                   compression_level,
                    eval.promises = TRUE,
                    precheck = TRUE) {
-  #  add objects to existing Rdata file. Original code written by "flodel"
-  # on StackOverflow (http://www.linkedin.com/in/florentdelmotte)  .
-  local({
-    previous <- load(file)
-    var.names <- c(list, as.character(substitute(list(...)))[-1L])
-    for (var in var.names) assign(var, get(var, envir = parent.frame()))
-    base::save(
-      list = unique(c(previous, var.names)),
-      file = file,
-      compress = comress,
-      ascii = ascii,
-      version = version,
-      envir = envir,
-      compression_level = compression_level,
-      eval.promises = eval.promises,
-      precheck = precheck)
-  })
+
+  previous <- if (file.exists(file)) load(file) else NULL
+  var.names <- c(list, as.character(substitute(list(...)))[-1L])
+  for (var in var.names) {
+    assign(var, get(var, envir = envir))
+    if (is.null(eval(as.symbol(var)))) {
+      previous <- previous[which(previous != var)]
+      var.names <- var.names[which(var.names != var)]
+    }
+  }
+  base::save(
+    list = unique(c(previous, var.names)),
+    file = file,
+    compress = compress,
+    ascii = ascii,
+    version = version,
+    eval.promises = eval.promises,
+    precheck = precheck)
 }
