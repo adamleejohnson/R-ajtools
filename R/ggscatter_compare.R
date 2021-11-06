@@ -13,13 +13,12 @@
 #' @param line.color Color of the fit line (default = "blue")
 #' @param line.size Fit line size (default = 0.7)
 #' @param point.size Scatter point size (default = 0.7)
-#' @param title.size Title font size (default = 12)
 #' @param ticks.breaks Vector of break points to use on the axes
 #' @param ticks.minor_breaks Vector of minor break points to use on the axes
 #' @param ... Additional theme parameters
 #'
 #' @export
-ggplot_scatter.compare <-
+ggscatter_compare <-
   function(data,
            data.x,
            data.y,
@@ -31,7 +30,6 @@ ggplot_scatter.compare <-
            line.color = "blue",
            line.size = 0.7,
            point.size = 0.7,
-           title.size = 12,
            ticks.breaks = NULL,
            ticks.minor_breaks = NULL,
            ...) {
@@ -71,7 +69,5 @@ ggplot_scatter.compare <-
       ) +
       ggplot2::coord_fixed(ratio = 1,
                            xlim = lim,
-                           ylim = lim) +
-      ggplot2::theme(plot.title = ggplot2::element_text(size = title.size),
-                     ...)
+                           ylim = lim)
   }

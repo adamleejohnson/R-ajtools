@@ -70,7 +70,7 @@ scibeautify <- function(.data,
   }
 
   # auto_ignore integers
-  if (auto_ignore_int && all(is_integer(n))) {
+  if (auto_ignore_int && all(is_integer_num(n))) {
     sci_mode <- "off"
     sig_digits <- NULL
   }

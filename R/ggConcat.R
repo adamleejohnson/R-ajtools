@@ -1,6 +1,5 @@
-#' Concatenate any ggplot components
-#'
-#' Typically, addition in `ggplot2` with the `+` operator is only permitted when the left-hand side is a `ggplot` object or a `theme` object. This function extends the ggplot2 functionality and allows the user to concatenate geom, theme, stats, labels, aes, Coord, and Scale objects into bundles using the `+` operator. These compositions can then be stored and used later in the construction of ggplots.
+#' @title Concatenate any ggplot components
+#' @description Typically, addition in `ggplot2` with the `+` operator is only permitted when the left-hand side is a `ggplot` object or a `theme` object. This function extends the ggplot2 functionality and allows the user to concatenate geom, theme, stats, labels, aes, Coord, and Scale objects into bundles using the `+` operator. These compositions can then be stored and used later in the construction of ggplots.
 #'
 #' A common use-case for this is to construct custom plot templates by concatenating base geoms and settings.
 #'
