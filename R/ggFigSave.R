@@ -27,13 +27,12 @@ ggfigsave <- function(
   format <- match.arg(format)
 
   # create output directory
-  if (xfun::is_rel_path(path)) path <- file.path(getwd(), path)
+  if (xfun::is_rel_path(path)) path <- getwd() %//% path
   dir.create(file.path(path), showWarnings = FALSE)
 
   # get name of ggplot object in parent environment & validate
   plot_object_name <- name
   while (!grepl("^[A-Za-z0-9_\\-\\. ]+$", plot_object_name)) {
-
     fixed_name <- gsub(" ", "_", trimws(gsub("[^A-Za-z0-9_\\-\\.]", " ", plot_object_name)))
 
     cat("Invalid output name \"",plot_object_name,"\"", sep = "")

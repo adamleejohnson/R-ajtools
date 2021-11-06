@@ -16,8 +16,8 @@ file_datestamp <- function (
   stopifnot(length(path) == 1)
 
   input_filename <- path.expand(input_filename)
+  if (xfun::is_rel_path(path)) path <- getwd() %//% path
   path <- path.expand(path)
-  if (stringr::str_ends(path, "/")) path <- substr(path,1,nchar(path)-1)
 
   date_stamp <- format(Sys.Date(), "%Y%m%d")
 
