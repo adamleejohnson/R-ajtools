@@ -8,6 +8,7 @@
 #' @param overwrite Whether to overwrite an existing file. Default = FALSE, which appends a numeric index to the filename.
 #' @param save_rds Whether to save an RDS file of the ggplot object. For large plots, can be very time-consuming.
 #' @inheritParams ggplot2::ggsave
+#' @return Original ggplot object, invisibly.
 #' @export
 ggfigsave <- function(
   ggdata,
@@ -78,7 +79,6 @@ ggfigsave <- function(
 
   # if on macos, adjust dpi with sips, and open
   if (Sys.info()["sysname"] == "Darwin") {
-
     img_path <- "'" %++% path %//% output_img_name %++% "'"
 
     if (format %in% c("png", "tiff", "bmp"))
@@ -92,6 +92,7 @@ ggfigsave <- function(
 
     if (open)
       system(paste("open ", img_path))
-
   }
+
+  invisible(ggdata)
 }

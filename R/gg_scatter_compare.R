@@ -18,7 +18,7 @@
 #' @param ... Additional theme parameters
 #'
 #' @export
-ggscatter_compare <-
+gg_scatter_compare <-
   function(data,
            data.x,
            data.y,
@@ -33,7 +33,6 @@ ggscatter_compare <-
            ticks.breaks = NULL,
            ticks.minor_breaks = NULL,
            ...) {
-
     label.x <- bquote_remask(label.x)
     label.y <- bquote_remask(label.y)
     title <- bquote_remask(title)
@@ -67,7 +66,9 @@ ggscatter_compare <-
         breaks = if (is.null(ticks.breaks)) ggplot2::waiver() else ticks.breaks,
         minor_breaks = if (is.null(ticks.minor_breaks)) ggplot2::waiver() else ticks.minor_breaks
       ) +
-      ggplot2::coord_fixed(ratio = 1,
-                           xlim = lim,
-                           ylim = lim)
+      ggplot2::coord_fixed(
+        ratio = 1,
+        xlim = lim,
+        ylim = lim
+      )
   }
