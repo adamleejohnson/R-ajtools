@@ -6,6 +6,7 @@
 #' @param aspect.ratio Ratio of width to height. Default = 1.
 #' @param open Open the image file after creation. Default = TRUE.
 #' @param overwrite Whether to overwrite an existing file. Default = FALSE, which appends a numeric index to the filename.
+#' @param save_rds Whether to save an RDS file of the ggplot object. For large plots, can be very time-consuming.
 #' @inheritParams ggplot2::ggsave
 #' @export
 ggfigsave <- function(
@@ -19,7 +20,8 @@ ggfigsave <- function(
   units = c("in", "cm", "mm", "px"),
   format = c("pdf", "eps", "ps", "tex", "jpeg", "tiff", "png", "bmp", "svg"),
   open = TRUE,
-  overwrite = FALSE) {
+  overwrite = FALSE,
+  save_rds = TRUE) {
 
   units <- match.arg(units)
   format <- match.arg(format)
@@ -54,14 +56,10 @@ ggfigsave <- function(
     plot_object_name <- plot_object_name_apppend
   }
 
-  # retrieve the ggplot object
-  assign(plot_object_name, ggdata)
-
   # save as rds
-  eval(substitute(
-    readr::write_rds(x, path %//% plot_object_name %++% ".rds", compress = "xz", compression = 9),
-    env = list(x = as.symbol(plot_object_name))
-  ))
+  if (save_rds) {
+    readr::write_rds(ggdata, path %//% plot_object_name %++% ".rds", compress = "xz", compression = 9)
+  }
 
   # save as rendered image
   output_img_name <- paste0(plot_object_name, ".", format)
