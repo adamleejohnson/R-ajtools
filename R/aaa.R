@@ -16,3 +16,5 @@ NULL
 "%||%" <- function(a, b) {
   if (!is.null(a)) a else b
 }
+
+is_waive <- ggplot2:::is.waive
