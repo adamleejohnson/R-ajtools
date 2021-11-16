@@ -1,3 +1,6 @@
+#' @title Ternary operator
+#' @param a lhs
+#' @param b rhs
 #' @export
 "%:%" <- function(a, b) {
   x <- strsplit(paste(deparse(substitute(a)), col = "\n"), "%?%", fixed = T)[[1]]

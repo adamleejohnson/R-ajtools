@@ -29,7 +29,7 @@ gg_concat <- function(e1, e2) {
     class(components) <- c("ggconcat", "list")
     return(components)
   } else {
-    ggplot2::`%paste%`(e1, e2)
+    ggplot2::`%+%`(e1, e2)
   }
 }
 
