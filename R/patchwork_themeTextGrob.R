@@ -3,9 +3,10 @@
 #'    about text color, size, etc, and apply it to all text grobs
 #' -- this allows you to do:
 #'    wrap_element(some_tableGrob) & theme(text = element_text(color = "red"))
+#' @noRd
 plot_table.wrapped_patch <- function(x, guides) {
   if ("grobs" %in% names(attributes(x))) {
-    theme_text <- ggplot2::calc_element("text", modifyList(ggplot2::theme_get(), remove_null(x$theme)))
+    theme_text <- ggplot2::calc_element("text", utils::modifyList(ggplot2::theme_get(), remove_null(x$theme)))
     grobs_attr <- attr(x, "grobs")
     for (n in (names(grobs_attr))) {
       grobs <- grobs_attr[[n]]$grobs
@@ -29,5 +30,5 @@ plot_table.wrapped_patch <- function(x, guides) {
     attr(x, "grobs") <- grobs_attr
   }
 
-  patchwork:::plot_table.patch(x, guides)
+  NextMethod("plot_table")
 }

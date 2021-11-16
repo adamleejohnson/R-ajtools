@@ -1,26 +1,29 @@
-#' Title
+#' @title Forest plot for generalized linear models
+#' @description Generate a forest plot with a table, optimized for logistic regression.
 #'
-#' @param glm_list
-#' @param stats.predictor_var
-#' @param stats.conf_interval
-#' @param stats.sig_pvalue
-#' @param label.effect_size
-#' @param label.dependent_var
-#' @param plot.rel_width
-#' @param plot.point.size
-#' @param plot.point.color
-#' @param plot.row.color
-#' @param plot.breaks
-#' @param plot.vertical.pos
-#' @param plot.vertical.label
+#' @param glm_list A named list of the results of calls to `lm()` or `glm()`. Names will be used as labels in the table.
+#' @param stats.predictor_var The name of the variable in the linear model that is being regressed on (i.e., the predictor variable).
+#' @param stats.conf_interval Confidence interval. Default = 95%.
+#' @param stats.effect_sig_digits Number of significant figures to for effect size and confidence interval
+#' @param stats.sig_pvalue (Not used) significant p-value after correction for multiple comparisons.
+#' @param label.effect_size Label/column header describing the effect size.
+#' @param label.dependent_var Label/column header for the dependent variables (i.e., predicted variables).
+#' @param plot.rel_width Width of the forest plot relative to the width of the table. Default = 0.33.
+#' @param plot.point.size Size of the boxes in the forest plot. Default = 1.8.
+#' @param plot.point.color Color of the boxes in the forest plot. Default = "dodgerblue4".
+#' @param plot.row.color Background color of alternating rows of the table. Default = "dodgerblue4" with 4% transparency. Use NA to omit background colors.
+#' @param plot.breaks Breaks to use on the horizontal axis of the forest plot.
+#' @param plot.vertical.pos Vertical position of the indicator line on the forest plot. Default = 1 for logistic regression, 0 otherwise. Use NA to omit.
+#' @param plot.vertical.label Boolean, whether to add a label on the horizontal axis corresponding to the vertical indicator, if not already included in the breaks.
 #'
-#' @return
-#' @export
 #' @import ggplot2
 #' @import patchwork
 #' @import dplyr
 #' @importFrom grDevices adjustcolor
 #' @importFrom grid unit unit.c
+#' @importFrom utils modifyList
+#' @importFrom rlang rep_along
+#' @export
 gg_glmforest <- function(glm_list,
                          stats.predictor_var,
                          stats.conf_interval = 0.95,

@@ -1,9 +1,6 @@
-#' Beautify a number in scientific format
-#'
-#' Takes a number (or vector of numbers), and formats it in scientific notation as a string (or vector of strings) for use in printing. This function will format the number according to the specified number of significant digits, and using the specified format for scientific notation (e.g. x 10^n, eN, EN, etc). It will also correctly produce latex and html compatible strings.
-#'
-#' `scibeautify.knit` will choose the correct output format (latex or html) based on the knit options at runtime. By default, the function will check whether the knit output is html or graphic (LaTeX), and use the appropriate string codes.
-#'
+#' @title Beautify a number in scientific format
+#' @description Takes a number (or vector of numbers), and formats it in scientific notation as a string (or vector of strings) for use in printing. This function will format the number according to the specified number of significant digits, and using the specified format for scientific notation (e.g. x 10^n, eN, EN, etc). It will also correctly produce latex and html compatible strings.
+#' @details `scibeautify.knit` will choose the correct output format (latex or html) based on the knit options at runtime. By default, the function will check whether the knit output is html or graphic (LaTeX), and use the appropriate string codes.
 #' @inheritParams signif_beautify
 #' @param .data Numeric vector or dataframe. Non-numeric vectors will be coerced to numeric only if numeric values are preserved.
 #' @param sci_mode (Optional) Can be one of "auto" (automatically choose whether scientific notation is used based on string length optimization), "on", or "off" (scientific notation always on or off).
@@ -13,7 +10,6 @@
 #' @param auto_ignore_int (Optional) If the data (or column) is all integers, will not truncate non-significant digits and will not use scientific notation
 #' @param .cols Tidy selector for columns when `.data` is a dataframe. Default = `tidyr::everything()`.
 #' @param .rows Vector of row numbers indicating where scibeautify should be applied.
-#'
 #' @export
 scibeautify <- function(.data,
                         sig_digits = 3,
