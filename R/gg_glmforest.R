@@ -34,8 +34,7 @@ gg_glmforest <- function(glm_list,
                          plot.row.color = adjustcolor(plot.point.color, alpha.f = 0.04),
                          plot.breaks = waiver(),
                          plot.vertical.pos = waiver(),
-                         plot.vertical.label = waiver()
-                         ) {
+                         plot.vertical.label = waiver()) {
 
   ## ------------------------------------ validate input ------------------------------------
   # make sure everything is a glm/lm result
@@ -44,7 +43,7 @@ gg_glmforest <- function(glm_list,
     stop("Input object must be a list of lm or glm objects, as returned by lm (glm)")
   }
   num_models <- length(glm_list)
-  if (is_waive(stats.sig_pvalue)) stats.sig_pvalue <- 0.05/num_models
+  if (is_waive(stats.sig_pvalue)) stats.sig_pvalue <- 0.05 / num_models
 
   # make sure all the models are the same type
   all_lm <- all(sapply(glm_list, function(x) identical("lm", class(x))))
@@ -54,14 +53,16 @@ gg_glmforest <- function(glm_list,
     links <- sapply(glm_list, function(x) x$family$link)
     (length(unique(fams)) == 1 && length(unique(links)) == 1)
   }
-  if (!(all_lm || all_glm) || (all_glm && !all_glm_same))
+  if (!(all_lm || all_glm) || (all_glm && !all_glm_same)) {
     stop("All models in the list must be of the same type (all lm, or if glm, all the same family and link")
+  }
 
   # make sure the effect var is a term in all models
   stats.predictor_var <- as.character(stats.predictor_var)
   predictor_var_present <- all(sapply(glm_list, function(x) stats.predictor_var %in% names(x$coefficients)))
-  if (!predictor_var_present)
+  if (!predictor_var_present) {
     stop("All models must have the predictor var ('", stats.predictor_var, "') in the model")
+  }
 
   ## ------------------------------------ get var names ------------------------------------
   effect_var_names <- names(glm_list)
@@ -77,7 +78,7 @@ gg_glmforest <- function(glm_list,
   use_logistic <- identical(family, "binomial") && identical(link, "logit")
   num_cases <- sapply(glm_list, function(x) {
     evar <- as.character(x$terms[[2]])
-    sum(x$model[,evar], na.rm = TRUE)
+    sum(x$model[, evar], na.rm = TRUE)
   })
   num_total <- sapply(glm_list, function(x) length(x$residuals))
   summaries <- lapply(glm_list, summary)
@@ -110,11 +111,12 @@ gg_glmforest <- function(glm_list,
     num_total,
     pval
   ) %>%
-  mutate(Index = row_number())
+    mutate(Index = row_number())
 
   ## ------------------------------------ create gg forest plot ------------------------------------
   forest_core <-
-    ggplot(df_plot,
+    ggplot(
+      df_plot,
       aes(
         y = effect_var_names,
         x = coeffs,
@@ -123,8 +125,8 @@ gg_glmforest <- function(glm_list,
       )
     ) +
     (if (!is.na(plot.vertical.pos)) geom_vline(xintercept = plot.vertical.pos, size = 0.3, color = "black", linetype = "dashed", alpha = 0.8)) +
-    geom_errorbarh(height = 0, size = 0.35, color = "gray30") + #adds the CIs
-    geom_point(shape = 15, size = plot.point.size, color = plot.point.color) + #this adds the effect sizes to the plot
+    geom_errorbarh(height = 0, size = 0.35, color = "gray30") + # adds the CIs
+    geom_point(shape = 15, size = plot.point.size, color = plot.point.color) + # this adds the effect sizes to the plot
     scale_y_discrete(
       name = NULL,
       labels = NULL,
@@ -137,16 +139,17 @@ gg_glmforest <- function(glm_list,
     #  - break: custom break points with scales::breaks_extended()
     scale_x_continuous(
       trans = if (use_logistic) scales::log10_trans() else scales::identity_trans(),
-      breaks = if (is_waive(plot.breaks))
-        {
-          function(limits) {
-            bks <- scales::breaks_extended(w = c(10, 100, 50, 1))(limits)
-            if ((plot.vertical.label %||% F) && !(plot.vertical.pos %in% bks)) bks <- c(bks, plot.vertical.pos)
-            if (!(limits[1] %in% bks)) bks <- c(limits[1], bks)
-            if (!(limits[2] %in% bks)) bks <- c(bks, limits[2])
-            bks
-          }
-        } else plot.breaks,
+      breaks = if (is_waive(plot.breaks)) {
+        function(limits) {
+          bks <- scales::breaks_extended(w = c(10, 100, 50, 1))(limits)
+          if ((plot.vertical.label %||% F) && !(plot.vertical.pos %in% bks)) bks <- c(bks, plot.vertical.pos)
+          if (!(limits[1] %in% bks)) bks <- c(limits[1], bks)
+          if (!(limits[2] %in% bks)) bks <- c(bks, limits[2])
+          bks
+        }
+      } else {
+        plot.breaks
+      },
       limits = function(range) {
         bks <- scales::breaks_extended(only.loose = TRUE, w = c(10, 1, 1, 10))(range)
         c(min(bks), max(bks))
@@ -201,7 +204,7 @@ gg_glmforest <- function(glm_list,
     df_plot %>%
     transmute(
       var = effect_var_names,
-      num_cases = paste0(scibeautify(num_cases)," ","(",round(100*num_cases/num_total, 1),")"),
+      num_cases = paste0(scibeautify(num_cases), " ", "(", round(100 * num_cases / num_total, 1), ")"),
       plot_spacer = "",
       coeffs = scibeautify(coeffs, justify_mode = "d", sci_mode = "off", sig_digits = stats.effect_sig_digits),
       ci = paste0(
@@ -215,14 +218,16 @@ gg_glmforest <- function(glm_list,
     )
 
   ## ------------------------------------ create tablegrob ------------------------------------
-  tbl_hjust <- mutate(df_table,
-    across(everything(), ~ 0.5),
-    across(c(var, ci), ~ 0),
-    across(coeffs, ~ 1),
+  tbl_hjust <- mutate(
+    df_table,
+    across(everything(), ~0.5),
+    across(c(var, ci), ~0),
+    across(coeffs, ~1),
   ) %>% as.matrix()
 
-  tbl_parse <- mutate(df_table,
-    across(-p, ~ F),
+  tbl_parse <- mutate(
+    df_table,
+    across(-p, ~F),
     across(p, ~ df_plot$p_hassci),
   ) %>% as.matrix()
 
@@ -273,7 +278,7 @@ gg_glmforest <- function(glm_list,
   header_names <- c(
     label.dependent_var,
     "Cases (%)",
-    paste0(label.effect_size, " (", 100*stats.conf_interval, "% CI)"),
+    paste0(label.effect_size, " (", 100 * stats.conf_interval, "% CI)"),
     "bolditalic(P) * bold(\"\U2013value\")"
   )[header_cols$sort]
 
@@ -290,7 +295,7 @@ gg_glmforest <- function(glm_list,
           fontface = 2L,
           parse = c(F, F, F, T)[header_cols$sort],
           hjust = tbl_hjust[1, header_cols$condensed],
-          x =  tbl_x[1, header_cols$condensed],
+          x = tbl_x[1, header_cols$condensed],
           vjust = 0.5,
           y = 0.5
         )
@@ -343,7 +348,7 @@ gg_glmforest <- function(glm_list,
     line_element <- ggplot2::calc_element("axis.line.x", modifyList(ggplot2::theme_get(), forest_core$theme, keep.null = T))
     vert_margin$b <- vert_margin$b + unit(line_element$size, "mm")
 
-    gtable::gtable_add_padding(tbl_grob, unit.c(vert_margin$t,  unit(0,"pt"), vert_margin$b,  unit(0,"pt")))
+    gtable::gtable_add_padding(tbl_grob, unit.c(vert_margin$t, unit(0, "pt"), vert_margin$b, unit(0, "pt")))
   }
 
   ## ------------------------------------ final output ------------------------------------
@@ -351,19 +356,20 @@ gg_glmforest <- function(glm_list,
     patchwork::wrap_plots(
       a_header = patchwork::wrap_elements(full = header_grob),
       b_table = (patchwork::wrap_elements(full = tbl_grob) +
-                 patchwork::inset_element(forest_core,
-                                          left = forest_hOffset$l,
-                                          top = 1,
-                                          bottom = 0,
-                                          right = 1 - forest_hOffset$r,
-                                          align_to = "full")
-                 )
-    ) +
-    patchwork::plot_layout(
-      design = c(
-        a_header = area(t = 1, l = 1, b = 1, r = 1),
-        b_table = area(t = 2, l = 1, b = num_models + 2, r = 1)
+        patchwork::inset_element(forest_core,
+          left = forest_hOffset$l,
+          top = 1,
+          bottom = 0,
+          right = 1 - forest_hOffset$r,
+          align_to = "full"
+        )
       )
-    )
+    ) +
+      patchwork::plot_layout(
+        design = c(
+          a_header = area(t = 1, l = 1, b = 1, r = 1),
+          b_table = area(t = 2, l = 1, b = num_models + 2, r = 1)
+        )
+      )
   }
 }

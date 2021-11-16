@@ -20,29 +20,29 @@
 #' measurement2 <- rnorm(100)
 #'
 #' # Generates a plot, with no optional arguments
-#' ggbland_altman(measurement1, measurement2)
+#' gg_bland_altman(measurement1, measurement2)
 #' @export
-ggbland_altman <- function(method1,
-                           method2,
-                           method1name = "Method 1",
-                           method2name = "Method 2",
-                           plotTitle = "Bland-Altman plot for comparison of 2 methods",
-                           sig.level = 0.95,
-                           LoA.mode = 1,
-                           ciDisplay = TRUE,
-                           ciShading = TRUE,
-                           ciFillColors = c("steelblue3", "gray85"),
-                           normalLow = FALSE,
-                           normalHigh = FALSE,
-                           lowest_y_axis = FALSE,
-                           highest_y_axis = FALSE,
-                           point_size = 0.8,
-                           overlapping = FALSE,
-                           x.plot.mode = "means",
-                           y.plot.mode = "difference",
-                           plotProportionalBias = FALSE,
-                           plotProportionalBias.se = TRUE,
-                           assume.differences.are.normal = TRUE) {
+gg_bland_altman <- function(method1,
+                            method2,
+                            method1name = "Method 1",
+                            method2name = "Method 2",
+                            plotTitle = "Bland-Altman plot for comparison of 2 methods",
+                            sig.level = 0.95,
+                            LoA.mode = 1,
+                            ciDisplay = TRUE,
+                            ciShading = TRUE,
+                            ciFillColors = c("steelblue3", "gray85"),
+                            normalLow = FALSE,
+                            normalHigh = FALSE,
+                            lowest_y_axis = FALSE,
+                            highest_y_axis = FALSE,
+                            point_size = 0.8,
+                            overlapping = FALSE,
+                            x.plot.mode = "means",
+                            y.plot.mode = "difference",
+                            plotProportionalBias = FALSE,
+                            plotProportionalBias.se = TRUE,
+                            assume.differences.are.normal = TRUE) {
 
   # Passes data to the blandr.statistics function to generate Bland-Altman statistics
   statistics.results <- blandr.statistics(method1, method2, sig.level, LoA.mode)

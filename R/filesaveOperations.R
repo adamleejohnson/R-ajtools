@@ -2,7 +2,7 @@
 #' @description Will also append a counter to prevent overwriting existing files
 #'
 #' @param input_filename Input filename(s) to check, as characters
-#' @param path Option path to prepend to filename
+#' @param path Optional path to prepend to filename. Defaults to current working directory. If a relative path is provided, path is assumed relative to the current working directory.
 #'
 #' @return A modified filepath
 #' @export

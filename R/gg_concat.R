@@ -42,12 +42,13 @@ is.ggconcat <- function(e) inherits(e, "ggconcat")
 # Register S3 methods via function call instead of NAMESPACE file
 # From https://github.com/wch/s3ops
 # -----------------------------------------------------------------------------
-.onLoad <- function(...) {
-  registerS3method("+", "gg", gg_concat)
-  registerS3method("+", "ggconcat", gg_concat)
-  registerS3method("+", "uneval", gg_concat)
-  registerS3method("+", "labels", gg_concat)
-}
+# .onLoad <- function(...) {
+#   registerS3method("+", "gg", gg_concat)
+#   registerS3method("+", "ggconcat", gg_concat)
+#   registerS3method("+", "uneval", gg_concat)
+#   registerS3method("+", "labels", gg_concat)
+# }
+
 # # S3 dispatch on operators
 # ========================
 #
