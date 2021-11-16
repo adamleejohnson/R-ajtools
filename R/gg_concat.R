@@ -18,19 +18,19 @@
 #' ggplot() + custom_geom()
 #'
 #' @rdname gg-concat
-gg_concat <- function(e1,e2) {
-  if (is.ggconcat(e1)          ||
-      inherits(e1, "uneval")   ||
-      inherits(e1, "labels")   ||
-      inherits(e1, "ggproto"))
-  {
+gg_concat <- function(e1, e2) {
+  if (is.ggconcat(e1) ||
+    inherits(e1, "uneval") ||
+    inherits(e1, "labels") ||
+    inherits(e1, "ggproto")) {
     if (!is.ggconcat(e1)) e1 <- list(e1)
     if (!is.ggconcat(e2)) e2 <- list(e2)
-    components <- append(e1,e2)
+    components <- append(e1, e2)
     class(components) <- c("ggconcat", "list")
     return(components)
+  } else {
+    ggplot2::`%paste%`(e1, e2)
   }
-  else ggplot2::`%+%`(e1,e2)
 }
 
 #' Test if object is a ggconcat list

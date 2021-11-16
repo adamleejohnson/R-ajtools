@@ -17,4 +17,5 @@ NULL
   if (!is.null(a)) a else b
 }
 
+waiver <- ggplot2::waiver
 is_waive <- ggplot2:::is.waive

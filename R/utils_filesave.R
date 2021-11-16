@@ -6,40 +6,38 @@
 #'
 #' @return A modified filepath
 #' @export
-file_datestamp <- function (
-  input_filename = stop("Input filename(s) required"),
-  path = getwd()) {
-
+file_datestamp <- function(input_filename = stop("Input filename(s) required"),
+                           path = getwd()) {
   use_path_default <- !("path" %in% names(match.call()[-1]))
 
   stopifnot(is.character(path))
   stopifnot(length(path) == 1)
 
   input_filename <- path.expand(input_filename)
-  if (xfun::is_rel_path(path)) path <- getwd() %//% path
+  if (xfun::is_rel_path(path)) path <- getwd() %slash% path
   path <- path.expand(path)
 
   date_stamp <- format(Sys.Date(), "%Y%m%d")
 
   sapply(input_filename, function(filename) {
-
     ext_extract <- "^(.*?)\\.([^.]+(?:\\.(?:gz|bz2|xz|zip))?)$"
     stem <- sub(ext_extract, "\\1", filename)
     ext <- sub(ext_extract, "\\2", filename)
-    if (ext != "") ext <- "." %++% ext
-    stem_date <- stem %++% "." %++% date_stamp
+    if (ext != "") ext <- "." %paste% ext
+    stem_date <- stem %paste% "." %paste% date_stamp
     index <- 1
-    test_name <- stem_date %++% ext
-    while (file.exists(path %//% test_name)) {
-      test_name <- stem_date %++% "_" %++% stringr::str_pad(index, 2, pad = "0") %++% ext
+    test_name <- stem_date %paste% ext
+    while (file.exists(path %slash% test_name)) {
+      test_name <- stem_date %paste% "_" %paste% stringr::str_pad(index, 2, pad = "0") %paste% ext
       index <- index + 1
     }
-    message("Filename ",test_name)
+    message("Filename ", test_name)
 
-    if (use_path_default)
+    if (use_path_default) {
       return(test_name)
-    else
-      return(path %//% test_name)
+    } else {
+      return(path %slash% test_name)
+    }
   }, USE.NAMES = F)
 }
 
@@ -57,7 +55,6 @@ resave <- function(...,
                    envir = parent.frame(),
                    eval.promises = TRUE,
                    precheck = TRUE) {
-
   previous <- if (file.exists(file)) load(file) else NULL
   var.names <- c(list, as.character(substitute(list(...)))[-1L])
   for (var in var.names) {
@@ -74,5 +71,6 @@ resave <- function(...,
     ascii = ascii,
     version = version,
     eval.promises = eval.promises,
-    precheck = precheck)
+    precheck = precheck
+  )
 }
