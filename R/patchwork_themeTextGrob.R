@@ -6,29 +6,51 @@
 #' @noRd
 plot_table.wrapped_patch <- function(x, guides) {
   if ("grobs" %in% names(attributes(x))) {
-    theme_text <- ggplot2::calc_element("text", utils::modifyList(ggplot2::theme_get(), remove_null(x$theme)))
+    theme_text <- ggplot2::calc_element("text", ggplot2::theme_get() + x$theme)
     grobs_attr <- attr(x, "grobs")
-    for (n in (names(grobs_attr))) {
-      grobs <- grobs_attr[[n]]$grobs
-      for (i in seq_along(grobs)) {
-        g <- grobs[[i]]
-        if (inherits(g, "text") && inherits(g, "grob")) {
-          g$gp$col        <- theme_text$colour      %||%  g$gp$col
-          g$gp$fontfamily <- theme_text$family      %||%  g$gp$fontfamily
-          g$gp$lineheight <- theme_text$lineheight  %||%  g$gp$lineheight
-          g$gp$fontsize   <- theme_text$size        %||%  g$gp$fontsize
-          g$gp$fontface   <- switch(theme_text$face %||% T, "plain" = 1, "bold" = 2, "italic" = 3, "bold.italic" = 4, T = g$gp$fontface)
-          # g$hjust <- theme_text$hjust
-          # g$vjust <- theme_text$vjust
-          # g$rot <- theme_text$angle
-
-          grobs[[i]] <- g
-        }
-      }
-      grobs_attr[[n]]$grobs <- grobs
+    for (n in names(grobs_attr)) {
+      if (is.null(grobs_attr[[n]])) next
+      grobs_attr[[n]]$grobs <- recurse_apply_theme(grobs_attr[[n]]$grobs, theme_text)
     }
     attr(x, "grobs") <- grobs_attr
   }
 
   NextMethod("plot_table")
+}
+
+#' @noRd
+plot_table.table_patch <- function(x, guides) {
+  if ("table" %in% names(attributes(x))) {
+    theme_text <- ggplot2::calc_element("text", ggplot2::theme_get() + x$theme)
+    gTable <- attr(x, "table")
+    gTable$grobs <- recurse_apply_theme(gTable$grobs, theme_text)
+    attr(x, "table") <- gTable
+  }
+
+  NextMethod("plot_table")
+}
+
+recurse_apply_theme <- function(gList, theme_text) {
+
+  if (!is.list(gList)) return(gList)
+
+  for (i in seq_along(gList)) {
+    e <- gList[[i]]
+    if (inherits(e, "grob") && inherits(e, "text")) {
+
+      # apply the edits
+      e$gp$col        <- theme_text$colour      %||%  e$gp$col
+      e$gp$fontfamily <- theme_text$family      %||%  e$gp$fontfamily
+      e$gp$lineheight <- theme_text$lineheight  %||%  e$gp$lineheight
+      e$gp$fontsize   <- theme_text$size        %||%  e$gp$fontsize
+      e$gp$fontface   <- switch(theme_text$face %||% T, "plain" = 1, "bold" = 2, "italic" = 3, "bold.italic" = 4, T = e$gp$fontface)
+
+    } else if (inherits(e, "gList") || inherits(e, "gTree")) {
+      e <- recurse_apply_theme(e, theme_text)
+    }
+
+    if (!is.null(e)) gList[[i]] <- e
+  }
+
+  return(gList)
 }
