@@ -90,7 +90,9 @@ ggplot_build.ggthemelock <- function(plot) {
   NextMethod("ggplot_build", plot)
 }
 
-is.themelocked <- function(e) inherits(e, "ggthemelock")
+#' @rdname gg_themelock
+#' @export
+is.themelocked <- function(object) inherits(object, "ggthemelock")
 
 as.themelocked <- function(e) {
   if (!is.themelocked(e)) class(e) <- c("ggthemelock", class(e))
