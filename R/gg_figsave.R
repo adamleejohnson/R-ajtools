@@ -74,6 +74,7 @@ ggfigsave <- function(ggdata,
         save_rds <- utils::askYesNo("Object size is " %paste% format(obj_sz, units = "MB", standard = "SI") %paste% ". Are you sure you want to save an .rds?", default = T)
       }
       if (save_rds) {
+        message("Saving '", plot_object_name, ".rds'")
         readr::write_rds(
           ggdata,
           path %slash% plot_object_name %paste% ".rds",
@@ -89,7 +90,7 @@ ggfigsave <- function(ggdata,
       output_img_name <- plot_object_name %paste% "." %paste% fmt
       if (is.na(width)) width <- height * aspect_ratio
       if (is.na(height)) height <- width / aspect_ratio
-      message("Saving '", output_img_name, "' as a ", width, units, " x ", height, units, " image at ", dpi, " dpi")
+      message("Saving '", output_img_name, "' as a ", format(width), units, " x ", format(height), units, " image at ", dpi, " dpi")
       ggplot2::ggsave(
         filename = output_img_name,
         path = path,
