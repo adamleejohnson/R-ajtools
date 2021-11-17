@@ -1,5 +1,6 @@
 .onLoad <- function(...) {
   register_s3_method("patchwork", "plot_table", "wrapped_patch", plot_table.wrapped_patch)
+  register_s3_method("patchwork", "plot_table", "table_patch", plot_table.table_patch)
 }
 
 register_s3_method <- function(pkg, generic, class, fun = NULL) {

@@ -2,9 +2,12 @@
 % Please edit documentation in R/gg_themelock.R
 \name{gg_themelock}
 \alias{gg_themelock}
+\alias{is.themelocked}
 \title{Lock the theme elements of a ggplot}
 \usage{
 gg_themelock(object)
+
+is.themelocked(object)
 }
 \arguments{
 \item{object}{A ggplot or theme object to apply a lock to; optional. See description and examples.}
