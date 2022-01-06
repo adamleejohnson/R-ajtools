@@ -22,6 +22,7 @@ scibeautify <- function(.data,
                         big_mark = ",",
                         big_interval = 3,
                         auto_ignore_int = T,
+                        nsmall = NULL,
                         .cols = tidyr::everything(),
                         .rows) {
 
@@ -74,7 +75,8 @@ scibeautify <- function(.data,
       decimal_mark = decimal_mark,
       big_mark = big_mark,
       big_interval = big_interval,
-      pad_zeros = pad_zeros
+      pad_zeros = pad_zeros,
+      nsmall = nsmall
     )
   )
 
@@ -89,7 +91,8 @@ scibeautify <- function(.data,
       decimal_mark = decimal_mark,
       big_mark = big_mark,
       big_interval = big_interval,
-      pad_zeros = pad_zeros
+      pad_zeros = TRUE,
+      nsmall = NULL
     )
   )
 
@@ -124,7 +127,8 @@ scibeautify <- function(.data,
       justify_mode = justify_mode,
       decimal = decimal_mark,
       tabular_numbers = T,
-      tabular_char = "0"
+      tabular_char = "0",
+      unicode_spaces = (output_format == "unicode")
     )
     l_pad <- coeff_pads[["l_pad"]]
     r_pad <- coeff_pads[["r_pad"]]
@@ -162,8 +166,8 @@ scibeautify <- function(.data,
         "E" = paste0("E","\\1")
       ),
       "unicode" = switch(sci_format,
-        "x" = paste0("\U2009\U00D7\U2009",base,"\\1"),
-        "." = paste0("\U2009\U00B7\U2009",base,"\\1"),
+        "x" = paste0("\U2009\U00D7\U2009",base,"^","\\1"),
+        "." = paste0("\U2009\U00B7\U2009",base,"^","\\1"),
         "e" = paste0("\U2009\U1D452\U2009","\\1"),
         "E" = paste0("\U2009\U1D5A4\U2009","\\1")
       ),
@@ -196,8 +200,8 @@ scibeautify <- function(.data,
   if (!is.na(justify_mode)) {
     convert_paddings <- function(x) {
       switch(output_format,
-        "ascii" = ,
-        "unicode" = gsub(".", " ", x),
+        "ascii" = gsub(".", " ", x),,
+        "unicode" = x,
         "html" = ifelse(x == "", "", paste0("<span style=\"visibility:hidden\">",x,"</span>")),
         "latex" = ifelse(x == "", "", paste0("\\phantom{{}",x,"{}}")),
         "plotmath" = ifelse(x == "", "", paste0("phantom( ",x," )"))
@@ -205,7 +209,7 @@ scibeautify <- function(.data,
     }
     convert_paddings_exp <- function(x) {
       switch(output_format,
-        "unicode" = gsub(".", "m", x),
+        "unicode" = x,
         "ascii" = ,
         "html" = ,
         "latex" = ,
@@ -246,7 +250,7 @@ scibeautify <- function(.data,
     },
     "latex" = {
       result <- gsub("\U221E", "\\\\infty", result)
-      result <- paste0("$", result, "$")
+      # result <- paste0("$", result, "$")
     },
     "plotmath" = {
       result <- gsub("\U221E", " infinity ", result)

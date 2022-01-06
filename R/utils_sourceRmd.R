@@ -2,11 +2,13 @@
 #' @description Retrieve the R code from an RMarkdown file and source it into a new environment variable. Uses [knitr::purl()], which comments-out any chunks that are not meant to be evaluated (i.e., `eval = F`).
 #'
 #' @param path Path to RMarkdown file
+#' @param suppress Supress all output from executed code?
 #' @param wd Optional working directory to use for script execution. Defaults to the directory containing the RMarkdown file.
 #'
+#' @inheritDotParams base::source
 #' @return A new environment containing the results of the sourced R code
 #' @export
-sourceRmd <- function(path, wd = dirname(path)) {
+sourceRmd <- function(path, wd = dirname(path), suppress = T, ...) {
 
   input.path <- normalizePath(path)
   target_wd <- normalizePath(wd)
@@ -20,7 +22,9 @@ sourceRmd <- function(path, wd = dirname(path)) {
   # source into a new environment
   env <- new.env()
   setwd(target_wd)
-  source(tmp_file, local = env)
+  opts <- modifyList(list(...), list(file = tmp_file, local = env))
+  if (suppress) purrr::quietly(do.call)(source, opts)
+  else do.call(source, opts)
   setwd(current_wd)
   return(env)
 }

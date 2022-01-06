@@ -20,12 +20,11 @@ ggfigsave <- function(ggdata,
                       format = c("pdf", "png", "rds"),
                       open = FALSE,
                       overwrite = FALSE) {
-
   if (!ggplot2::is.ggplot(ggdata)) {
     stop("Object must be a ggplot.")
   }
 
-  valid_ext <-  c("pdf", "eps", "ps", "tex", "jpeg", "tiff", "png", "bmp", "svg", "rds")
+  valid_ext <- c("pdf", "eps", "ps", "tex", "jpeg", "tiff", "png", "bmp", "svg", "rds")
   format <- match.arg(format, valid_ext, several.ok = TRUE)
   units <- match.arg(units)
   if (is_waive(name)) name <- deparse(substitute(ggdata))
@@ -43,8 +42,8 @@ ggfigsave <- function(ggdata,
   }
 
   # create output directory
-  if (xfun::is_rel_path(path)) path <- getwd() %slash% path
-  path <- path %slash% plot_object_name
+  if (xfun::is_rel_path(path)) path <- getwd() %//% path
+  path <- path %//% plot_object_name
   dir.create(file.path(path), showWarnings = FALSE, recursive = TRUE)
 
   # don't overwrite old files; append an index instead
@@ -52,7 +51,7 @@ ggfigsave <- function(ggdata,
     append_ind <- 1
     plot_object_name_apppend <- plot_object_name
     overwrite <- interactive()
-    while (any(file.exists(path %slash% plot_object_name_apppend %paste% "." %paste% c("rds", format)))) {
+    while (any(file.exists(path %//% plot_object_name_apppend %++% "." %++% c("rds", format)))) {
       if (overwrite) {
         overwrite <- utils::askYesNo(paste0("File '", plot_object_name_apppend, "' exists. Overwrite?"), default = F)
         if (overwrite) break
@@ -64,30 +63,25 @@ ggfigsave <- function(ggdata,
   }
 
   for (fmt in unique(format)) {
-
     if (fmt == "rds") {
-
       # save as rds
       obj_sz <- utils::object.size(rlang::duplicate(ggdata))
       save_rds <- T
       if (obj_sz > 100e6 && interactive()) {
-        save_rds <- utils::askYesNo("Object size is " %paste% format(obj_sz, units = "MB", standard = "SI") %paste% ". Are you sure you want to save an .rds?", default = T)
+        save_rds <- utils::askYesNo("Object size is " %++% format(obj_sz, units = "MB", standard = "SI") %++% ". Are you sure you want to save an .rds?", default = T)
       }
       if (save_rds) {
         message("Saving '", plot_object_name, ".rds'")
         readr::write_rds(
           ggdata,
-          path %slash% plot_object_name %paste% ".rds",
+          path %//% plot_object_name %++% ".rds",
           compress = "xz",
-          compression = 9,
-          version = 3
+          compression = 9
         )
       }
-
     } else {
-
       # save as rendered images
-      output_img_name <- plot_object_name %paste% "." %paste% fmt
+      output_img_name <- plot_object_name %++% "." %++% fmt
       if (is.na(width)) width <- height * aspect_ratio
       if (is.na(height)) height <- width / aspect_ratio
       message("Saving '", output_img_name, "' as a ", format(width), units, " x ", format(height), units, " image at ", dpi, " dpi")
@@ -95,7 +89,7 @@ ggfigsave <- function(ggdata,
         filename = output_img_name,
         path = path,
         plot = ggdata,
-        device = if (fmt == "pdf") grDevices::cairo_pdf else fmt,
+        device = if (fmt == "pdf" && grDevices__cairoVersion() != "") grDevices::cairo_pdf else fmt,
         dpi = dpi,
         width = width,
         height = height,
@@ -104,7 +98,7 @@ ggfigsave <- function(ggdata,
 
       # if on macos, adjust dpi with sips, and open
       if (Sys.info()["sysname"] == "Darwin") {
-        img_path <- "'" %paste% path %slash% output_img_name %paste% "'"
+        img_path <- "'" %++% path %//% output_img_name %++% "'"
 
         if (fmt %in% c("png", "tiff", "bmp")) {
           system(paste("sips -s dpiHeight", dpi, "-s dpiWidth", dpi, img_path), ignore.stdout = T)

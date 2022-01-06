@@ -10,8 +10,12 @@
 
 #' @rdname str_plus
 #' @export
+"%++%" <- `%paste%`
+
+#' @rdname str_plus
+#' @export
 "%paste%.default" <- function(a, b) {
-  stop("`%paste%` does not have a defined default method")
+  as.character(a) %paste% as.character(b)
 }
 
 #' @rdname str_plus
@@ -29,6 +33,10 @@
 "%slash%" <- function(a, b) {
   UseMethod("%slash%")
 }
+
+#' @rdname str_plus
+#' @export
+"%//%" <- `%slash%`
 
 #' @rdname str_plus
 #' @export

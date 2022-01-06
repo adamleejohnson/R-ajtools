@@ -4,7 +4,7 @@
 \alias{ggsurvplot_patchwork}
 \title{Convert a ggsurvplot to a patchwork}
 \usage{
-ggsurvplot_patchwork(fit, scibeautify = T, axis.title.y.margin.r = 3, ...)
+ggsurvplot_patchwork(fit, scibeautify = T, axis.title.y.nudge = 0, ...)
 }
 \arguments{
 \item{fit}{allowed values include:
@@ -16,7 +16,7 @@ ggsurvplot_patchwork(fit, scibeautify = T, axis.title.y.margin.r = 3, ...)
 
 \item{scibeautify}{Whether to apply \code{\link[=scibeautify]{scibeautify()}} to the numbers in the risk table}
 
-\item{axis.title.y.margin.r}{Custom right-margin for the y-axis title of the plot, in units of "lines"}
+\item{axis.title.y.nudge}{Custom right-margin for the y-axis title of the plot, in units of "lines"}
 
 \item{...}{
   Arguments passed on to \code{\link[survminer:ggsurvplot]{survminer::ggsurvplot}}

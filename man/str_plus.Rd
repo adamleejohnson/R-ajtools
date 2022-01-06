@@ -3,20 +3,26 @@
 \name{str_plus}
 \alias{str_plus}
 \alias{\%paste\%}
+\alias{\%++\%}
 \alias{\%paste\%.default}
 \alias{\%paste\%.character}
 \alias{\%slash\%}
+\alias{\%//\%}
 \alias{\%slash\%.default}
 \alias{\%slash\%.character}
 \title{String concatenation}
 \usage{
 a \%paste\% b
 
+a \%++\% b
+
 \method{\%paste\%}{default}(a, b)
 
 \method{\%paste\%}{character}(a, b)
 
 a \%slash\% b
+
+a \%//\% b
 
 \method{\%slash\%}{default}(a, b)
 

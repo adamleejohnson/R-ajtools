@@ -12,7 +12,7 @@ _snaps/
 # User-specific files
 .Ruserdata
 
-# Output files from R CMD check
+# Output files from R CMDa check
 /*.Rcheck/
 
 # RStudio files

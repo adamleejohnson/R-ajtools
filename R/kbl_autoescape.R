@@ -131,51 +131,79 @@ tex_to_html <- function(input) {
 #' @importFrom tidyselect everything
 #'
 #' @export
-kbl.escape <- function(df, row.names = NA,
+kbl.escape <- function(df, format = NULL, row.names = NA,
                        col.names = NA, align = "c", caption = NULL, label = NULL, format.args = list(),
                        escape = TRUE, table.attr = "", booktabs = FALSE, longtable = FALSE,
                        valign = "t", position = "", centering = TRUE, linebreaker = "\n", ...) {
-  df %>%
-    as.data.frame() %>% {
-    if (knitr::is_latex_output()) {
-      mutate(., across(everything(), ~kableExtra::linebreak(.x, align = align, linebreaker = linebreaker))) %>%
-      `colnames<-`(kableExtra::linebreak(colnames(.), align = align, linebreaker = linebreaker)) %>%
-      `rownames<-`(kableExtra::linebreak(rownames(.), align = align, linebreaker = linebreaker)) %>%
-      kableExtra::kbl("latex",
-          booktabs = T,
-          escape = F,
-          col.names = col.names,
-          align = align,
-          caption = caption,
-          label = label,
-          format.args = format.args,
-          table.attr = table.attr,
-          longtable = longtable,
-          valign = valign,
-          position = position,
-          centering = centering,
-          ...
-        )
-    }
-    else {
-      mutate(., across(everything(), tex_to_html)) %>%
-      `colnames<-`(tex_to_html(colnames(.))) %>%
-      `rownames<-`(tex_to_html(rownames(.))) %>%
-      kableExtra::kbl("html",
-          booktabs = T,
-          escape = F,
-          col.names = col.names,
-          align = align,
-          caption = caption,
-          label = label,
-          format.args = format.args,
-          table.attr = table.attr,
-          longtable = longtable,
-          valign = valign,
-          position = position,
-          centering = centering,
-          ...
-        )
-    }
+
+  if (knitr::is_latex_output() || (format %||% F) == "latex") {
+
+    as.data.frame(df) %>%
+    mutate(across(everything(), .fns = list(
+      ~ kableExtra::linebreak(.x, align = align, linebreaker = linebreaker),
+      ~ stringr::str_replace_all(.x, "\\%", "\\\\%")
+    ))) %>%
+    `colnames<-`(kableExtra::linebreak(colnames(.), align = align, linebreaker = linebreaker)) %>%
+    `rownames<-`(kableExtra::linebreak(rownames(.), align = align, linebreaker = linebreaker)) %>%
+    `colnames<-`(stringr::str_replace_all(colnames(.), "\\%", "\\\\%")) %>%
+    `rownames<-`(stringr::str_replace_all(rownames(.), "\\%", "\\\\%")) %>%
+    kableExtra::kbl(
+        format = "latex",
+        booktabs = T,
+        escape = F,
+        col.names = col.names,
+        align = align,
+        caption = caption,
+        label = label,
+        format.args = format.args,
+        table.attr = table.attr,
+        longtable = longtable,
+        valign = valign,
+        position = position,
+        centering = centering,
+        ...
+      )
+  }
+  else if (knitr::is_html_output() || (format %||% "html") == "html") {
+
+    as.data.frame(df) %>%
+    mutate(across(everything(), tex_to_html)) %>%
+    `colnames<-`(tex_to_html(colnames(.))) %>%
+    `rownames<-`(tex_to_html(rownames(.))) %>%
+    kableExtra::kbl(
+        format = "html",
+        booktabs = T,
+        escape = F,
+        col.names = col.names,
+        align = align,
+        caption = caption,
+        label = label,
+        format.args = format.args,
+        table.attr = table.attr,
+        longtable = longtable,
+        valign = valign,
+        position = position,
+        centering = centering,
+        ...
+      )
+  } else {
+
+    as.data.frame(df) %>%
+    kableExtra::kbl(
+      format = format,
+      booktabs = booktabs,
+      escape = escape,
+      col.names = col.names,
+      align = align,
+      caption = caption,
+      label = label,
+      format.args = format.args,
+      table.attr = table.attr,
+      longtable = longtable,
+      valign = valign,
+      position = position,
+      centering = centering,
+      ...
+    )
   }
 }

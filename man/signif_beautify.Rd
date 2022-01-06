@@ -12,7 +12,8 @@ signif_beautify(
   big_mark = ",",
   big_interval = 3,
   pad_zeros = F,
-  justify_char = " "
+  justify_char = " ",
+  nsmall = NULL
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ signif_beautify(
 \item{pad_zeros}{Whether to add extra trailing zeros and/or a decimal to force number of significant digits (even if the original number did not have that many digits). Default = FALSE.}
 
 \item{justify_char}{Character (or string) used to pad strings.}
+
+\item{nsmall}{Forces output to have nsmall digits after the decimal. If there are fewer significant digits than total digits after including nsmall, the number of significant digits is increased.}
 }
 \description{
 Standard significant figure functions (such as \code{signif}, \code{format}) either do not output a string format (thereby excluding necessary trailing decimals & zeros), or do not correctly pad the number with the correct number of trailing zeros. This function aims to address these issues.

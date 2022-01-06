@@ -6,6 +6,7 @@
 \usage{
 kbl.escape(
   df,
+  format = NULL,
   row.names = NA,
   col.names = NA,
   align = "c",
@@ -25,6 +26,14 @@ kbl.escape(
 }
 \arguments{
 \item{df}{data frame}
+
+\item{format}{A character string. Possible values are \code{latex},
+\code{html}, \code{pipe} (Pandoc's pipe tables), \code{simple} (Pandoc's
+simple tables), and \code{rst}. The value of this argument will be
+automatically determined if the function is called within a \pkg{knitr}
+document. The \code{format} value can also be set in the global option
+\code{knitr.table.format}. If \code{format} is a function, it must return a
+character string.}
 
 \item{row.names}{Logical: whether to include row names. By default, row names
 are included if \code{rownames(x)} is neither \code{NULL} nor identical to
@@ -80,13 +89,6 @@ environment.}
     \item{\code{x}}{For \code{kable()}, \code{x} is an R object, which is typically a
 matrix or data frame. For \code{kables()}, a list with each element being a
 returned value from \code{kable()}.}
-    \item{\code{format}}{A character string. Possible values are \code{latex},
-\code{html}, \code{pipe} (Pandoc's pipe tables), \code{simple} (Pandoc's
-simple tables), and \code{rst}. The value of this argument will be
-automatically determined if the function is called within a \pkg{knitr}
-document. The \code{format} value can also be set in the global option
-\code{knitr.table.format}. If \code{format} is a function, it must return a
-character string.}
     \item{\code{digits}}{Maximum number of digits for numeric columns, passed to
 \code{round()}. This can also be a vector of length \code{ncol(x)}, to set
 the number of digits for individual columns.}

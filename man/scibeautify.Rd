@@ -17,6 +17,7 @@ scibeautify(
   big_mark = ",",
   big_interval = 3,
   auto_ignore_int = T,
+  nsmall = NULL,
   .cols = tidyr::everything(),
   .rows
 )
@@ -45,6 +46,8 @@ scibeautify.knit(.data, output_format = NULL, ...)
 \item{big_interval}{Number of digits between each \code{big_mark}, if used.}
 
 \item{auto_ignore_int}{(Optional) If the data (or column) is all integers, will not truncate non-significant digits and will not use scientific notation}
+
+\item{nsmall}{Forces output to have nsmall digits after the decimal. If there are fewer significant digits than total digits after including nsmall, the number of significant digits is increased.}
 
 \item{.cols}{Tidy selector for columns when \code{.data} is a dataframe. Default = \code{tidyr::everything()}.}
 

@@ -43,8 +43,16 @@ gg_scatter_compare <-
       label.y <- bquote_remask(label.y ~ (units))
     }
 
+    data <- data %>%
+      select(data.x = {{data.x}}, data.y = {{data.y}}) %>%
+      mutate(label = "")
+
+    r2 <- scibeautify(cor(pull(data, data.x), pull(data, data.y), method = "pearson")^2)
+
+    theme_text <- calc_element("text", theme_get())
+
     ggplot2::ggplot(data) +
-      ggplot2::aes_string(x = data.x, y = data.y) +
+      ggplot2::aes(x = data.x, y = data.y, label = label) +
       ggplot2::geom_smooth(
         formula = y ~ x,
         method = "lm",
@@ -70,5 +78,23 @@ gg_scatter_compare <-
         ratio = 1,
         xlim = lim,
         ylim = lim
+      ) +
+      ggrepel::geom_text_repel(
+        data = data %>%
+          bind_rows(tibble(
+            data.x = 0.5*min(data$data.x) + 0.5*max(data$data.x),
+            data.y = max(data$data.y),
+            label = deparse(bquote(r^2 == .(r2)))
+        )),
+        parse = T,
+        min.segment.length = Inf,
+        force = 1,
+        force_pull = 0,
+        size = 0.35 * theme_text$size,
+        lineheight = theme_text$lineheight,
+        fontface = theme_text$face,
+        family = theme_text$family,
+        colour = theme_text$colour,
+        seed = 2718
       )
   }

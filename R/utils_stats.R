@@ -6,6 +6,9 @@ z_score <- function(x) {
 }
 
 #' @noRd
+sym_setdiff <- function(a,b) c(setdiff(a,b), setdiff(b,a))
+
+#' @noRd
 setdiff.lazy <- function(x,y) {
   for (i in seq_along(y)) {
     if (y[i] %in% x) x <- x[ -match(y[i], x) ]
@@ -19,5 +22,5 @@ setdiff.lazy <- function(x,y) {
 #' @param n Numeric to test
 #' @export
 is_integer_num <- function(n) {
-  n == round(n)
+  !is.na(n) & n == round(n)
 }

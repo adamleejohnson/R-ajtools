@@ -3,12 +3,12 @@
 #' @inheritParams survminer::ggsurvplot
 #' @inheritDotParams survminer::ggsurvplot
 #' @param scibeautify Whether to apply [scibeautify()] to the numbers in the risk table
-#' @param axis.title.y.margin.r Custom right-margin for the y-axis title of the plot, in units of "lines"
+#' @param axis.title.y.nudge Custom right-margin for the y-axis title of the plot, in units of "lines"
 #' @return A patchwork
 #' @export
 ggsurvplot_patchwork <- function(fit,
                                  scibeautify = T,
-                                 axis.title.y.margin.r = 3,
+                                 axis.title.y.nudge = 0,
                                  ...) {
 
   # pass custom options to ggsurvplot
@@ -23,50 +23,46 @@ ggsurvplot_patchwork <- function(fit,
   opts <- utils::modifyList(custom_opts, opts, keep.null = T)
   ggsurv <- do.call(survminer::ggsurvplot, opts)
 
-  # specify axis.text color from the current theme (fix for some bug...)
-  axis.text <- ggplot2::calc_element("text", theme_get())
+  ggsurv$plot$theme <- theme(
+    plot.margin = unit(c(0,0,0,0), "pt"),
+    axis.title.x = element_text(margin = margin(t = 6)),
+    axis.title.y = element_text(margin = margin(r = -unit(90 + axis.title.y.nudge, "lines"))),
+    axis.text = element_text(size = rel(1)),
+    legend.position = c(0.25, 0.6),
+    legend.background = element_rect(fill = NA),
+    legend.text = element_text(size = rel(1))
+  )
 
-  # convert components to grobs
-  plotGrob <- ggplot2::ggplotGrob({
-    ggsurv$plot$theme <- theme(
-      plot.margin = unit(c(0,0,0,0), "pt"),
-      axis.title.x = element_text(margin = margin(t = 6)),
-      axis.title.y = element_text(margin = margin(r = axis.title.y.margin.r, unit = "lines")),
-      axis.text = element_text(size = rel(1), color = axis.text$colour),
-      legend.position = c(0.25, 0.6),
-      legend.background = element_rect(fill = NA),
-      legend.text = element_text(size = rel(1))
-    )
-    ggsurv$plot
-  })
+  # adjust the theme of the risk table
+  ggsurv$table$theme <- theme(
+    plot.margin = unit(c(5,0,0,0), "pt"),
+    plot.title = element_text(hjust = 0, face = "bold", size = rel(1), margin = margin(b = 2)),
+    plot.title.position = "plot",
+    axis.title = element_blank(),
+    axis.text = element_text(size = rel(1), color = ggplot2::calc_element("text", theme_get())$colour),
+    axis.text.y = element_text(hjust = 0, size = rel(1)),
+    axis.text.x = element_blank(),
+    axis.line = element_blank(),
+    axis.ticks = element_blank(),
+    legend.position = "none"
+  )
+  if (scibeautify %||% F) ggsurv$table$layers[[1]]$data$llabels <- scibeautify(ggsurv$table$layers[[1]]$data$llabels)
+  ggsurv$table <- ggsurv$table + gg_themelock()
 
-  # move the plot y-axis title grob one position to the right
-  y_title_grob_ind <- which(plotGrob$layout$name == "ylab-l")
-  y_title_row <- plotGrob$layout[y_title_grob_ind, "l"]
-  plotGrob$widths <- replace(plotGrob$widths, y_title_row, unit(0, "pt"))
-  plotGrob$layout[y_title_grob_ind, "l"] <- y_title_row + 1
-  plotGrob$layout[y_title_grob_ind, "r"] <- y_title_row + 1
-  plotGrob$grobs[[y_title_grob_ind]]$vp$parent$x <- unit(1, "npc") - unit(2, "lines")
-
-  riskGrob <- ggplotGrob({
-    ggsurv$table$theme <- theme(
-      plot.margin = unit(c(5,0,0,0), "pt"),
-      plot.title = element_text(hjust = 0, face = "bold", size = rel(1), margin = margin(b = 4)),
-      plot.title.position = "plot",
-      axis.title = element_blank(),
-      axis.text = element_text(size = rel(1), color = axis.text$colour),
-      axis.text.y = element_text(hjust = 0, size = rel(1)),
-      axis.text.x = element_blank(),
-      axis.line = element_blank(),
-      axis.ticks = element_blank(),
-      legend.position = "none"
-    )
-    if (scibeautify %||% F) ggsurv$table$layers[[1]]$data$llabels <- scibeautify(ggsurv$table$layers[[1]]$data$llabels)
-    ggsurv$table + gg_themelock()
-  })
+  # # convert risk table to grob and move the y labels one row to the left
+  # riskGrob <- ggplot2::ggplotGrob(ggsurv$table)
+  # ylab_grob_ind <- which(riskGrob$layout$name == "axis-l")
+  # ylab_row <- riskGrob$layout[ylab_grob_ind, "l"]
+  # swap_idx <- c(ylab_row - 1, ylab_row)
+  # riskGrob$widths <- replace(riskGrob$widths, ylab_row - 1, riskGrob$widths[ylab_row])
+  # riskGrob$widths <- replace(riskGrob$widths, ylab_row, unit(0, "pt"))
+  # riskGrob$layout[ylab_grob_ind, "l"] <- ylab_row - 1
+  # riskGrob$layout[ylab_grob_ind, "r"] <- ylab_row - 1
+  # riskGrob$grobs[[ylab_grob_ind]]$vp$x <- unit(0, "npc")
+  # riskGrob$grobs[[ylab_grob_ind]]$vp$justification <- c(0, 0.5)
 
   # compose the patchwork
-  patchwork::wrap_ggplot_grob(plotGrob) /
-  patchwork::wrap_ggplot_grob(riskGrob) +
-  patchwork::plot_layout(heights = c(.85, .15))
+  ggsurv$plot /
+  as.ggGeomTextModify(ggsurv$table) +
+  patchwork::plot_layout(heights = grid::unit.c(unit(1, "null"), unit(length(fit$strata), "lines") + unit(6, "pt")))
 }
