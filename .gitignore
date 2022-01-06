@@ -1,4 +1,22 @@
-.Rhistory
-.Rproj.user
 .DS_Store
-man/*.Rd
+# man/*.Rd
+_snaps/
+
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData*
+
+# User-specific files
+.Ruserdata
+
+# Output files from R CMDa check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+
+# iCloud
+*.icloud
