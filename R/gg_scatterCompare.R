@@ -44,7 +44,7 @@ gg_scatter_compare <-
     }
 
     data <- data %>%
-      select(data.x = {{data.x}}, data.y = {{data.y}}) %>%
+      select(data.x = {{ data.x }}, data.y = {{ data.y }}) %>%
       mutate(label = "")
 
     r2 <- scibeautify(cor(pull(data, data.x), pull(data, data.y), method = "pearson")^2)
@@ -82,10 +82,10 @@ gg_scatter_compare <-
       ggrepel::geom_text_repel(
         data = data %>%
           bind_rows(tibble(
-            data.x = 0.5*min(data$data.x) + 0.5*max(data$data.x),
+            data.x = 0.5 * min(data$data.x) + 0.5 * max(data$data.x),
             data.y = max(data$data.y),
             label = deparse(bquote(r^2 == .(r2)))
-        )),
+          )),
         parse = T,
         min.segment.length = Inf,
         force = 1,
