@@ -1,5 +1,6 @@
 # AJ Tools
 
+![test](https://raw.githubusercontent.com/dwyl/repo-badges/main/svg/build-passing.svg)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/ajtools)](https://cran.r-project.org/package=ajtools)
 
 This R package is a collection of functions, utilities, and ggplots used in the analysis and publication of biomedical research. It is being made public here to facilitate transparent peer review of scientific work that relies on code in this package.
