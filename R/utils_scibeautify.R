@@ -5,7 +5,7 @@
 #' @param .data Numeric vector or dataframe. Non-numeric vectors will be coerced to numeric only if numeric values are preserved.
 #' @param sci_mode (Optional) Can be one of "auto" (automatically choose whether scientific notation is used based on string length optimization), "on", or "off" (scientific notation always on or off).
 #' @param sci_format (Optional) Formatting of scientific notation. Can be one of "x" (times character), "." (center dot), "e" (lowercase e), "E" (uppercase E). Default = "x".
-#' @param output_format (Optional) Output target. Can be one of "plain", "ascii" (same as plain), "unicode", "html", "latex". Default = "unicode".
+#' @param output_format (Optional) Output target. Can be one of "plain", "ascii" (same as plain), "unicode", "html", "latex", "plotmath", and "markdown". Default = "unicode".
 #' @param justify_mode Mode to use for justifying a numbers. Can be "l" (left), "c" (center), "r" (right), or "d" (decimal). An "x" flag can be appended which will independently align the exponent portion of numbers in scientific notation, in addition to aligning the coefficient. Allowed values = `c("l", "c", "r", "d", "lx", "cx", "rx", "dx")`.
 #' @param auto_ignore_int (Optional) If the data (or column) is all integers, will not truncate non-significant digits and will not use scientific notation
 #' @param .cols Tidy selector for columns when `.data` is a dataframe. Default = `tidyr::everything()`.
@@ -13,7 +13,7 @@
 #' @export
 scibeautify <- function(.data,
                         sig_digits = 3,
-                        output_format = c("unicode", "plain", "ascii", "html", "latex", "plotmath"),
+                        output_format = c("unicode", "plain", "ascii", "html", "latex", "plotmath", "markdown"),
                         sci_mode = c("auto", "on", "off"),
                         sci_format = c("x", ".", "e", "E"),
                         justify_mode = c("none", "l", "c", "r", "d", "lx", "cx", "rx", "dx"),
@@ -143,21 +143,22 @@ scibeautify <- function(.data,
 
   # Convert sci notation to appropriate formats
   convert_sciformat <- function(x) {
-    # replace the multiplication sign
+    # format the exponent
     x <- switch(sci_format,
       "x" = ,
       "." = switch(output_format,
-        "ascii" =    x,
+        "ascii" = ,
         "unicode" =  x,
         "html" =     gsub("([-\\d]+)$", "<sup>\\1</sup>", x, perl = T),
         "latex" =    gsub("([-\\d]+)$", "^{\\1}", x, perl = T),
-        "plotmath" = gsub("([-\\d]+)$", "^{\\1}", x, perl = T)
+        "plotmath" = gsub("([-\\d]+)$", "^{\\1}", x, perl = T),
+        "markdown" = gsub("([-\\d]+)$", "^\\1^", x, perl = T),
       ),
       "e" = x,
       "E" = x
     )
 
-    # format the exponent
+    # replace the multiplication sign
     x <- gsub("^E(.+)", switch(output_format,
       "ascii" = switch(sci_format,
         "x" = paste0(" x ",base,"^","\\1"),
@@ -188,7 +189,13 @@ scibeautify <- function(.data,
         "." = paste0(" %.% ", base, "\\1"),
         "e" = paste0(" * e * ","\\1"),
         "E" = paste0(" * E * ", "\\1")
-      )
+      ),
+      "markdown" = switch(sci_format,
+        "x" = paste0("\U2009\U00D7\U2009",base,"\\1"),
+        "." = paste0("\U2009\U00B7\U2009",base,"\\1"),
+        "e" = paste0("\U2009\U1D452\U2009","\\1"),
+        "E" = paste0("\U2009\U1D5A4\U2009","\\1")
+      ),
     ), x, perl = T)
 
     return(x)
@@ -200,8 +207,9 @@ scibeautify <- function(.data,
   if (!is.na(justify_mode)) {
     convert_paddings <- function(x) {
       switch(output_format,
-        "ascii" = gsub(".", " ", x),,
-        "unicode" = x,
+        "markdown" = ,
+        "unicode" = ,
+        "ascii" = gsub(".", " ", x),
         "html" = ifelse(x == "", "", paste0("<span style=\"visibility:hidden\">",x,"</span>")),
         "latex" = ifelse(x == "", "", paste0("\\phantom{{}",x,"{}}")),
         "plotmath" = ifelse(x == "", "", paste0("phantom( ",x," )"))
@@ -209,8 +217,9 @@ scibeautify <- function(.data,
     }
     convert_paddings_exp <- function(x) {
       switch(output_format,
-        "unicode" = x,
-        "ascii" = ,
+        "markdown" = gsub("\\d", " ", x),
+        "unicode" = ,
+        "ascii" = x,
         "html" = ,
         "latex" = ,
         "plotmath" = convert_paddings(x)
@@ -240,6 +249,7 @@ scibeautify <- function(.data,
 
   # some final cleanup
   switch(output_format,
+    "markdown" = ,
     "unicode" = {
       result <- gsub("-", "\U2212", result)
       result <- gsub("Inf", "\U221E", result)

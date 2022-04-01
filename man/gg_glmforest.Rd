@@ -15,7 +15,7 @@ gg_glmforest(
   plot.rel_width = 0.33,
   plot.point.size = 1.8,
   plot.point.color = "dodgerblue4",
-  plot.row.color = adjustcolor(plot.point.color, alpha.f = 0.04),
+  plot.row.color = col_flatten_alpha(plot.point.color, 0.06),
   plot.breaks = waiver(),
   plot.vertical.pos = waiver(),
   plot.vertical.label = waiver()

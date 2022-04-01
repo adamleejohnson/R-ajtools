@@ -8,7 +8,8 @@
 scibeautify(
   .data,
   sig_digits = 3,
-  output_format = c("unicode", "plain", "ascii", "html", "latex", "plotmath"),
+  output_format = c("unicode", "plain", "ascii", "html", "latex", "plotmath",
+    "markdown"),
   sci_mode = c("auto", "on", "off"),
   sci_format = c("x", ".", "e", "E"),
   justify_mode = c("none", "l", "c", "r", "d", "lx", "cx", "rx", "dx"),
@@ -29,7 +30,7 @@ scibeautify.knit(.data, output_format = NULL, ...)
 
 \item{sig_digits}{Number of significant digits. If NA or NULL, the input number is not changed.}
 
-\item{output_format}{(Optional) Output target. Can be one of "plain", "ascii" (same as plain), "unicode", "html", "latex". Default = "unicode".}
+\item{output_format}{(Optional) Output target. Can be one of "plain", "ascii" (same as plain), "unicode", "html", "latex", "plotmath", and "markdown". Default = "unicode".}
 
 \item{sci_mode}{(Optional) Can be one of "auto" (automatically choose whether scientific notation is used based on string length optimization), "on", or "off" (scientific notation always on or off).}
 

@@ -35,7 +35,7 @@ ggsurvplot_patchwork <- function(fit,
 
   # adjust the theme of the risk table
   ggsurv$table$theme <- theme(
-    plot.margin = unit(c(5,0,0,0), "pt"),
+    plot.margin = unit(c(0,0,0,0), "pt"),
     plot.title = element_text(hjust = 0, face = "bold", size = rel(1), margin = margin(b = 2)),
     plot.title.position = "plot",
     axis.title = element_blank(),
@@ -65,4 +65,10 @@ ggsurvplot_patchwork <- function(fit,
   ggsurv$plot /
   as.ggGeomTextModify(ggsurv$table) +
   patchwork::plot_layout(heights = grid::unit.c(unit(1, "null"), unit(length(fit$strata), "lines") + unit(6, "pt")))
+}
+
+y <- function() {
+  x <- x
+  message("hello")
+  plot(x)
 }

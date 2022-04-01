@@ -328,6 +328,10 @@ gg_manhattan <- function(data,
 
   progBar("Done", 1)
   progBar(NA, NA)
+
+  # add ggGeomTextModify class to enable theming of text elements when using as part of a patchwork
+  g <- as.ggGeomTextModify(g)
+
   return(g)
 }
 

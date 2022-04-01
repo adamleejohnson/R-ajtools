@@ -23,7 +23,13 @@ sourceRmd <- function(path, wd = dirname(path), suppress = T, ...) {
   env <- new.env()
   setwd(target_wd)
   opts <- modifyList(list(...), list(file = tmp_file, local = env))
-  if (suppress) purrr::quietly(do.call)(source, opts)
+  if (suppress) {
+    img_file <- tempfile()
+    on.exit(file.remove(img_file), add = TRUE)
+    grDevices::png(img_file)
+    purrr::quietly(do.call)(source, opts)
+    grDevices::dev.off()
+  }
   else do.call(source, opts)
   setwd(current_wd)
   return(env)

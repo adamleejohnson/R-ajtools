@@ -6,7 +6,11 @@
 \alias{col_rmp_blue}
 \title{Color ramp shortcuts}
 \usage{
-col_ramp_brewer(palette = rownames(RColorBrewer::brewer.pal.info), alpha = 0.4)
+col_ramp_brewer(
+  palette = rownames(RColorBrewer::brewer.pal.info),
+  alpha = 0.4,
+  convert_alpha_to_white = TRUE
+)
 
 col_rmp_red(x)
 
@@ -16,6 +20,8 @@ col_rmp_blue(x)
 \item{palette}{An RColorBrewer palette.}
 
 \item{alpha}{Transparency. Default 0.4.}
+
+\item{convert_alpha_to_white}{If true, will use the alpha value to internally generate RBG values (instead of RBGA) assuming a white background}
 
 \item{x}{Argument to the returned object, which is a function that maps (0,1) -> hex color code.}
 }
