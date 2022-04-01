@@ -10,21 +10,28 @@ plot_table.wrapped_patch <- function(x, guides) {
     grobs_attr <- attr(x, "grobs")
     for (n in names(grobs_attr)) {
       if (is.null(grobs_attr[[n]])) next
-      grobs_attr[[n]]$grobs <- recurse_apply_theme(grobs_attr[[n]]$grobs, theme_text)
+      if (inherits(grobs_attr[[n]], "grob") && inherits(grobs_attr[[n]], "text")) {
+        grobs_attr[[n]] <- recurse_apply_theme(list(grobs_attr[[n]]), theme_text)[[1]]
+      }
+      if ("grobs" %in% names(grobs_attr[[n]])) {
+        grobs_attr[[n]]$grobs <- recurse_apply_theme(grobs_attr[[n]]$grobs, theme_text)
+      }
     }
     attr(x, "grobs") <- grobs_attr
   }
   NextMethod("plot_table")
 }
 
-#' Special method for when using patchwork::wrap_ggplot_grob(), instead of patchwork::wrap_element()
+#' Special method for when using patchwork:::wrap_ggplot_grob(), instead of patchwork::wrap_element()
 #' @noRd
 plot_table.table_patch <- function(x, guides) {
   if ("table" %in% names(attributes(x))) {
     theme_text <- ggplot2::calc_element("text", ggplot2::theme_get() + x$theme)
     gTable <- attr(x, "table")
-    gTable$grobs <- recurse_apply_theme(gTable$grobs, theme_text)
-    attr(x, "table") <- gTable
+    if ("grobs" %in% names(gTable)) {
+      gTable$grobs <- recurse_apply_theme(gTable$grobs, theme_text)
+      attr(x, "table") <- gTable
+    }
   }
   NextMethod("plot_table")
 }
@@ -62,14 +69,13 @@ plot_table.ggGeomTextModify <- function(x, guides) {
     theme_text <- ggplot2::calc_element("text", ggplot2::theme_get() + x$theme)
 
     for (i in seq_along(x$layers)) {
-      if (inherits(x$layers[[i]]$geom, "GeomText")) {
+      if (any(sapply(c("GeomText", "GeomTextRepel"), function(c) inherits(x$layers[[i]]$geom, c)))) {
 
         x$layers[[i]]$aes_params$colour     <- theme_text$colour
         x$layers[[i]]$aes_params$size       <- theme_text$size * 0.35
         x$layers[[i]]$aes_params$fontface   <- theme_text$face
         x$layers[[i]]$aes_params$family     <- theme_text$family
         x$layers[[i]]$aes_params$lineheight <- theme_text$lineheight
-
       }
     }
   }
