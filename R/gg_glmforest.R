@@ -163,7 +163,7 @@ gg_glmforest <- function(glm_list,
       } else {
         plot.breaks
       },
-      limits = function(range, use_logistic = FALSE, plot.breaks = NULL) {
+      limits = function(range) {
         if (!is_waive(plot.breaks)) {
           bks <- sort(plot.breaks)
         } else {
