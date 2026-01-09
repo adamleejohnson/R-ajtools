@@ -22,6 +22,7 @@
 #' @param highlight_loci.width Width, in kilobases, of loci identified by highlight_loci.thresh to include in the highlight regions
 #' @param highlight_loci.color Highlight color
 #' @param label.size Font size of labels relative to the ggplot theme text element
+#' @param plot.width Target width of the plot, in pixels. Used to correctly size inter-chromosome spacing. If NULL (default), uses the width of the current device
 #'
 #' @import dplyr
 #' @importFrom magrittr "%<>%"
@@ -46,6 +47,7 @@ gg_manhattan <- function(data,
                          chr.labels = waiver(),
                          limits_y = waiver(),
                          breaks_y = waiver(),
+                         plot.width = NULL,
                          progress = TRUE
                          ) {
 
@@ -53,8 +55,8 @@ gg_manhattan <- function(data,
 
   # constants
   BIN_NUM <- 100000 # number of bins for X position
-  GAP_PROPORTION <- 8/dev.size("px")[1] # gap between chromosomes is this fraction of overall width
-  CHR_MIN_PROPORTION <- 18/dev.size("px")[1] # width of chromosome is at minimum this fraction of overall width
+  GAP_PROPORTION <- 8/(plot.width %||% dev.size("px")[1]) # gap between chromosomes is this fraction of overall width
+  CHR_MIN_PROPORTION <- 18/(plot.width %||% dev.size("px")[1]) # width of chromosome is at minimum this fraction of overall width
 
   # verbose progress output
   progBar <- (function() {

@@ -349,7 +349,7 @@ gg_glmforest <- function(glm_list,
     )
     # ... and also add the width of the x-axis line to the bottom margin
     line_element <- ggplot2::calc_element("axis.line.x", modifyList(ggplot2::theme_get(), forest_core$theme, keep.null = T))
-    vert_margin$b <- vert_margin$b + unit(line_element$size, "mm")
+    vert_margin$b <- vert_margin$b + unit(line_element$linewidth, "mm")
 
     gtable::gtable_add_padding(tbl_grob, unit.c(vert_margin$t, unit(0, "pt"), vert_margin$b, unit(0, "pt")))
   }
