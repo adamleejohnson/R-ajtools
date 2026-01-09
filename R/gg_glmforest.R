@@ -117,6 +117,16 @@ gg_glmforest <- function(glm_list,
     mutate(Index = row_number())
 
   ## ------------------------------------ create gg forest plot ------------------------------------
+  vert_line <- {
+    if (!is.na(plot.vertical.pos))
+      geom_vline(
+        xintercept = plot.vertical.pos,
+        linewidth = 0.3,
+        color = "black",
+        linetype = "dashed",
+        alpha = 0.8
+      )
+  }
   forest_core <-
     ggplot(
       df_plot,
@@ -127,7 +137,7 @@ gg_glmforest <- function(glm_list,
         xmax = conf_upper
       )
     ) +
-    (if (!is.na(plot.vertical.pos)) geom_vline(xintercept = plot.vertical.pos, linewidth = 0.3, color = "black", linetype = "dashed", alpha = 0.8)) +
+    vert_line +
     geom_errorbarh(height = 0, size = 0.35, color = "gray30") + # adds the CIs
     geom_point(shape = 15, size = plot.point.size, color = plot.point.color) + # this adds the effect sizes to the plot
     scale_y_discrete(
@@ -154,6 +164,7 @@ gg_glmforest <- function(glm_list,
         plot.breaks
       },
       limits = function(range) {
+        browser()
         bks <- scales::breaks_extended(only.loose = TRUE, w = c(10, 1, 1, 10))(range)
         c(min(bks), max(bks))
       },
