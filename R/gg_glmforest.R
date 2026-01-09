@@ -127,7 +127,7 @@ gg_glmforest <- function(glm_list,
         xmax = conf_upper
       )
     ) +
-    (if (!is.na(plot.vertical.pos)) geom_vline(xintercept = plot.vertical.pos, size = 0.3, color = "black", linetype = "dashed", alpha = 0.8)) +
+    (if (!is.na(plot.vertical.pos)) geom_vline(xintercept = plot.vertical.pos, linewidth = 0.3, color = "black", linetype = "dashed", alpha = 0.8)) +
     geom_errorbarh(height = 0, size = 0.35, color = "gray30") + # adds the CIs
     geom_point(shape = 15, size = plot.point.size, color = plot.point.color) + # this adds the effect sizes to the plot
     scale_y_discrete(
@@ -177,7 +177,7 @@ gg_glmforest <- function(glm_list,
     ) +
     gg_themelock() +
     theme( # modifiable theme elements
-      line = element_line(size = 0.3),
+      line = element_line(linewidth = 0.3),
       axis.text = element_text(size = rel(1), color = NULL),
       axis.text.x = element_text(size = rel(0.85)),
       axis.ticks.length.x = unit(5, "points"),
