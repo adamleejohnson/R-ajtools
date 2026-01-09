@@ -163,9 +163,14 @@ gg_glmforest <- function(glm_list,
       } else {
         plot.breaks
       },
-      limits = function(range) {
-        bks <- scales::breaks_extended(only.loose = TRUE, w = c(10, 1, 1, 10))(range)
+      limits = function(range, use_logistic = FALSE, plot.breaks = NULL) {
+        if (!is_waive(plot.breaks)) {
+          bks <- sort(plot.breaks)
+        } else {
+          bks <- scales::breaks_extended(only.loose = TRUE, w = c(10, 1, 1, 10))(range)
+        }
 
+        # Adjust for logistic scales: avoid 0 as minimum
         if (use_logistic && min(bks) == 0 && length(bks) > 1) {
           min_val <- bks[2]  # pick the next lowest break
         } else {
