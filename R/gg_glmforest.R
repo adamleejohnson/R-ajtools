@@ -357,9 +357,9 @@ gg_glmforest <- function(glm_list,
   ## ------------------------------------ final output ------------------------------------
   {
     patchwork::wrap_plots(
-      a_header = patchwork::wrap_elements(full = header_grob),
+      a_header = ggplot() + annotation_custom(as.ggGeomTextModify(header_grob)) + theme_void(),
       b_table = (
-        patchwork::wrap_elements(full = as.ggGeomTextModify(tbl_grob)) +
+        ggplot() + annotation_custom(as.ggGeomTextModify(tbl_grob)) + theme_void() +
         patchwork::inset_element(forest_core,
           left = forest_hOffset$l,
           top = 1,
