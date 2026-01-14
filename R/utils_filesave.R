@@ -22,9 +22,16 @@ file_datestamp <- function(input_filename = stop("Input filename(s) required"),
 
   sapply(input_filename, function(filename) {
     ext_extract <- "^(.*?)\\.([^.]+(?:\\.(?:gz|bz2|xz|zip|zst))?)$"
-    stem <- sub(ext_extract, "\\1", filename)
-    ext <- sub(ext_extract, "\\2", filename)
-    if (ext != "") ext <- "." %++% ext
+
+    if (!grepl(ext_extract, filename)) {
+      stem <- filename
+      ext <- ""
+    } else {
+      stem <- sub(ext_extract, "\\1", filename)
+      ext <- sub(ext_extract, "\\2", filename)
+      if (ext != "") ext <- "." %++% ext
+    }
+
     stem_date <- stem %++% "." %++% date_stamp
     index <- 1
     test_name <- stem_date %++% ext

@@ -117,6 +117,16 @@ gg_glmforest <- function(glm_list,
     mutate(Index = row_number())
 
   ## ------------------------------------ create gg forest plot ------------------------------------
+  vert_line <- {
+    if (!is.na(plot.vertical.pos))
+      geom_vline(
+        xintercept = plot.vertical.pos,
+        linewidth = 0.3,
+        color = "black",
+        linetype = "dashed",
+        alpha = 0.8
+      )
+  }
   forest_core <-
     ggplot(
       df_plot,
@@ -127,7 +137,7 @@ gg_glmforest <- function(glm_list,
         xmax = conf_upper
       )
     ) +
-    (if (!is.na(plot.vertical.pos)) geom_vline(xintercept = plot.vertical.pos, size = 0.3, color = "black", linetype = "dashed", alpha = 0.8)) +
+    vert_line +
     geom_errorbarh(height = 0, size = 0.35, color = "gray30") + # adds the CIs
     geom_point(shape = 15, size = plot.point.size, color = plot.point.color) + # this adds the effect sizes to the plot
     scale_y_discrete(
@@ -154,8 +164,20 @@ gg_glmforest <- function(glm_list,
         plot.breaks
       },
       limits = function(range) {
-        bks <- scales::breaks_extended(only.loose = TRUE, w = c(10, 1, 1, 10))(range)
-        c(min(bks), max(bks))
+        if (!is_waive(plot.breaks)) {
+          bks <- sort(plot.breaks)
+        } else {
+          bks <- scales::breaks_extended(only.loose = TRUE, w = c(10, 1, 1, 10))(range)
+        }
+
+        # Adjust for logistic scales: avoid 0 as minimum
+        if (use_logistic && min(bks) == 0 && length(bks) > 1) {
+          min_val <- bks[2]  # pick the next lowest break
+        } else {
+          min_val <- min(bks)
+        }
+
+        c(min_val, max(bks))
       },
       expand = expansion(mult = 0, add = 0)
     ) +
@@ -177,7 +199,7 @@ gg_glmforest <- function(glm_list,
     ) +
     gg_themelock() +
     theme( # modifiable theme elements
-      line = element_line(size = 0.3),
+      line = element_line(linewidth = 0.3),
       axis.text = element_text(size = rel(1), color = NULL),
       axis.text.x = element_text(size = rel(0.85)),
       axis.ticks.length.x = unit(5, "points"),
@@ -349,7 +371,7 @@ gg_glmforest <- function(glm_list,
     )
     # ... and also add the width of the x-axis line to the bottom margin
     line_element <- ggplot2::calc_element("axis.line.x", modifyList(ggplot2::theme_get(), forest_core$theme, keep.null = T))
-    vert_margin$b <- vert_margin$b + unit(line_element$size, "mm")
+    vert_margin$b <- vert_margin$b + unit(line_element$linewidth, "mm")
 
     gtable::gtable_add_padding(tbl_grob, unit.c(vert_margin$t, unit(0, "pt"), vert_margin$b, unit(0, "pt")))
   }
@@ -357,9 +379,9 @@ gg_glmforest <- function(glm_list,
   ## ------------------------------------ final output ------------------------------------
   {
     patchwork::wrap_plots(
-      a_header = patchwork::wrap_elements(full = header_grob),
+      a_header = ggplot() + annotation_custom(as.ggGeomTextModify(header_grob)) + theme_void(),
       b_table = (
-        patchwork::wrap_elements(full = as.ggGeomTextModify(tbl_grob)) +
+        ggplot() + annotation_custom(as.ggGeomTextModify(tbl_grob)) + theme_void() +
         patchwork::inset_element(forest_core,
           left = forest_hOffset$l,
           top = 1,
