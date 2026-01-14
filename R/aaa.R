@@ -17,7 +17,7 @@
 }
 
 waiver <- ggplot2::waiver
-is_waive <- ggplot2:::is_waiver
+is_waive <- ggplot2:::is.waive
 
 ## usethis namespace: start
 #' @importFrom Rcpp sourceCpp
