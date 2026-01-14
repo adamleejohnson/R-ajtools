@@ -277,7 +277,7 @@ scibeautify <- function(.data,
 
 #' @rdname scibeautify
 #' @inheritDotParams scibeautify
-#' @return
+#' @return A character vector with numbers formatted for knitting output
 #' @export
 scibeautify.knit <- function(.data, output_format = NULL, ...) {
     output_format <- {

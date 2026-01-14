@@ -59,6 +59,9 @@ scibeautify.knit(.data, output_format = NULL, ...)
     \item{\code{}}{}
   }}
 }
+\value{
+A character vector with numbers formatted for knitting output
+}
 \description{
 Takes a number (or vector of numbers), and formats it in scientific notation as a string (or vector of strings) for use in printing. This function will format the number according to the specified number of significant digits, and using the specified format for scientific notation (e.g. x 10^n, eN, EN, etc). It will also correctly produce latex and html compatible strings.
 }

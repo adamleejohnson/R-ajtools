@@ -11,7 +11,6 @@
 #' @param lhs A value or the magrittr placeholder.
 #' @param rhs A function call using the magrittr semantics.
 #' @return The result of calling `rhs(lhs)`.
-NULL
 
 "%||%" <- function(a, b) {
   if (!is.null(a)) a else b
@@ -23,12 +22,10 @@ is_waive <- ggplot2:::is_waiver
 ## usethis namespace: start
 #' @importFrom Rcpp sourceCpp
 ## usethis namespace: end
-NULL
 
 ## usethis namespace: start
 #' @useDynLib ajtools, .registration = TRUE
 ## usethis namespace: end
-NULL
 
 
 ## unexported functions from other packages
