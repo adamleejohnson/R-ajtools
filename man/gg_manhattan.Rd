@@ -25,6 +25,7 @@ gg_manhattan(
   chr.labels = waiver(),
   limits_y = waiver(),
   breaks_y = waiver(),
+  plot.width = NULL,
   progress = TRUE
 )
 }
@@ -68,6 +69,8 @@ gg_manhattan(
 \item{limits_y}{Optional. y-axis limits, in -log10 units.}
 
 \item{breaks_y}{Optional. y-axis breaks, in -log10 units.}
+
+\item{plot.width}{Target width of the plot, in pixels. Used to correctly size inter-chromosome spacing. If NULL (default), uses the width of the current device}
 
 \item{progress}{Whether to show a progress bar during ggplot construction}
 }

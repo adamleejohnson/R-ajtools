@@ -17,8 +17,8 @@ sourceRmd(path, wd = dirname(path), suppress = T, ...)
   Arguments passed on to \code{\link[base:source]{base::source}}
   \describe{
     \item{\code{file}}{a \link[base]{connection} or a character string giving the
-    pathname of the file or URL to read from.  \code{""} indicates the
-    connection \code{\link[base]{stdin}()}.}
+    pathname of the file or URL to read from.  The \code{\link[base]{stdin}()}
+    connection reads from the console when interactive.}
     \item{\code{local}}{\code{TRUE}, \code{FALSE} or an environment, determining
     where the parsed expressions are evaluated.  \code{FALSE} (the
     default) corresponds to the user's workspace (the global
@@ -26,9 +26,6 @@ sourceRmd(path, wd = dirname(path), suppress = T, ...)
     \code{source} is called.}
     \item{\code{echo}}{logical; if \code{TRUE}, each expression is printed
     after parsing, before evaluation.}
-    \item{\code{print.eval}}{logical; if \code{TRUE}, the result of
-    \code{eval(i)} is printed for each expression \code{i}; defaults
-    to the value of \code{echo}.}
     \item{\code{exprs}}{for \code{source()} and \code{withAutoprint(*, evaluated=TRUE)}:
     \emph{instead} of specifying \code{file}, an
     \code{\link[base]{expression}}, \code{\link[base]{call}}, or \code{\link[base]{list}}
@@ -58,6 +55,8 @@ sourceRmd(path, wd = dirname(path), suppress = T, ...)
     \item{\code{chdir}}{logical; if \code{TRUE} and \code{file} is a pathname,
     the \R working directory is temporarily changed to the directory
     containing \code{file} for evaluating.}
+    \item{\code{catch.aborts}}{logical indicating that \dQuote{abort}ing errors
+    should be caught.}
     \item{\code{encoding}}{character vector.  The encoding(s) to be assumed when
     \code{file} is a character string: see \code{\link[base]{file}}.  A
     possible value is \code{"unknown"} when the encoding is guessed: see

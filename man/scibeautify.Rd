@@ -8,8 +8,7 @@
 scibeautify(
   .data,
   sig_digits = 3,
-  output_format = c("unicode", "plain", "ascii", "html", "latex", "plotmath",
-    "markdown"),
+  output_format = c("unicode", "plain", "ascii", "html", "latex", "plotmath", "markdown"),
   sci_mode = c("auto", "on", "off"),
   sci_format = c("x", ".", "e", "E"),
   justify_mode = c("none", "l", "c", "r", "d", "lx", "cx", "rx", "dx"),
@@ -59,9 +58,6 @@ scibeautify.knit(.data, output_format = NULL, ...)
   \describe{
     \item{\code{}}{}
   }}
-}
-\value{
-
 }
 \description{
 Takes a number (or vector of numbers), and formats it in scientific notation as a string (or vector of strings) for use in printing. This function will format the number according to the specified number of significant digits, and using the specified format for scientific notation (e.g. x 10^n, eN, EN, etc). It will also correctly produce latex and html compatible strings.

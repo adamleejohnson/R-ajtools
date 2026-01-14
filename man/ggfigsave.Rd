@@ -28,18 +28,16 @@ are combined to create the fully qualified file name. Defaults to the
 working directory.}
 
 \item{dpi}{Plot resolution. Also accepts a string input: "retina" (320),
-"print" (300), or "screen" (72). Applies only to raster output types.}
+"print" (300), or "screen" (72). Only applies when converting pixel units,
+as is typical for raster output types.}
 
-\item{width}{Plot size in \code{units} ("in", "cm", "mm", or "px").
-If not supplied, uses the size of current graphics device.}
-
-\item{height}{Plot size in \code{units} ("in", "cm", "mm", or "px").
-If not supplied, uses the size of current graphics device.}
+\item{width, height}{Plot size in units expressed by the \code{units} argument.
+If not supplied, uses the size of the current graphics device.}
 
 \item{aspect_ratio}{Ratio of width to height. Default = 1.}
 
-\item{units}{Plot size in \code{units} ("in", "cm", "mm", or "px").
-If not supplied, uses the size of current graphics device.}
+\item{units}{One of the following units in which the \code{width} and \code{height}
+arguments are expressed: \code{"in"}, \code{"cm"}, \code{"mm"} or \code{"px"}.}
 
 \item{format}{Output file format, any of "rds", "pdf", "eps", "ps", "tex", "jpeg", "tiff", "png", "bmp", "svg".}
 

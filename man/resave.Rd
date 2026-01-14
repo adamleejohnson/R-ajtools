@@ -20,7 +20,7 @@ resave(
 \item{...}{the names of the objects to be saved (as symbols or
     character strings).}
 
-\item{list}{A character vector containing the names of objects to be
+\item{list}{a character vector (or \code{\link[base]{NULL}}) containing the names of objects to be
     saved.}
 
 \item{file}{a (writable binary-mode) \link[base]{connection} or the name of the
@@ -31,7 +31,7 @@ resave(
 \item{compress}{logical or character string specifying whether saving
     to a named file is to use compression.  \code{TRUE} corresponds to
     \command{gzip} compression, and character strings \code{"gzip"},
-    \code{"bzip2"} or \code{"xz"} specify the type of
+    \code{"bzip2"}, \code{"xz"} or \code{"zstd"} specify the type of
     compression.  Ignored when \code{file} is a connection and
     for workspace format version 1.}
 

@@ -10,7 +10,11 @@ Description: A collection of R functions, tools, and ggplots.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
+<<<<<<< HEAD
 RoxygenNote: 7.3.3
+=======
+RoxygenNote: 7.1.2
+>>>>>>> 3c48c13548ca7eecb6f0346bf676fd962b34a183
 Imports: 
     arrow,
     curl,

@@ -29,11 +29,11 @@ kbl.escape(
 
 \item{format}{A character string. Possible values are \code{latex},
 \code{html}, \code{pipe} (Pandoc's pipe tables), \code{simple} (Pandoc's
-simple tables), and \code{rst}. The value of this argument will be
-automatically determined if the function is called within a \pkg{knitr}
-document. The \code{format} value can also be set in the global option
-\code{knitr.table.format}. If \code{format} is a function, it must return a
-character string.}
+simple tables), \code{rst}, \code{jira}, and \code{org} (Emacs Org-mode).
+The value of this argument will be automatically determined if the function
+is called within a \pkg{knitr} document. The \code{format} value can also
+be set in the global option \code{knitr.table.format}. If \code{format} is
+a function, it must return a character string.}
 
 \item{row.names}{Logical: whether to include row names. By default, row names
 are included if \code{rownames(x)} is neither \code{NULL} nor identical to
@@ -41,12 +41,13 @@ are included if \code{rownames(x)} is neither \code{NULL} nor identical to
 
 \item{col.names}{A character vector of column names to be used in the table.}
 
-\item{align}{Choose from "l", "c" or "r"}
+\item{align}{Choose from "l", "c" or "r".  Defaults to "l".}
 
 \item{caption}{The table caption.}
 
 \item{label}{The table reference label. By default, the label is obtained
-from \code{knitr::\link[knitr]{opts_current}$get('label')}.}
+from \code{knitr::\link[knitr]{opts_current}$get('label')}. To disable the label,
+use \code{label = NA}.}
 
 \item{format.args}{A list of arguments to be passed to \code{\link{format}()}
 to format table values, e.g. \code{list(big.mark = ',')}.}
@@ -67,8 +68,8 @@ some special cases.}
 table that will span over two or more pages, you will have to turn this on.}
 
 \item{valign}{You probably won't need to adjust this latex option very often.
-If you are familar with latex tables, this is the optional position for the
-tabular environment controling the vertical position of the table relative
+If you are familiar with latex tables, this is the optional position for the
+tabular environment controlling the vertical position of the table relative
 to the baseline of the surrounding text. Possible choices are \code{b}, \code{c} and
 \code{t} (default).}
 
@@ -81,7 +82,7 @@ floating around if you specify captions for your table. Possible choices are
 \item{centering}{T (default)/F. Whether to center tables in the table
 environment.}
 
-\item{linebreaker}{Symbol for linebreaks to replace. Default is \verb{\\\\n}.}
+\item{linebreaker}{Symbol for linebreaks to replace. Default is \verb{\\n}.}
 
 \item{...}{
   Arguments passed on to \code{\link[kableExtra:kbl]{kableExtra::kbl}}
@@ -92,6 +93,8 @@ returned value from \code{kable()}.}
     \item{\code{digits}}{Maximum number of digits for numeric columns, passed to
 \code{round()}. This can also be a vector of length \code{ncol(x)}, to set
 the number of digits for individual columns.}
+    \item{\code{tabular}}{The "inner environment" to use for the
+table, e.g. "tabularx".}
     \item{\code{vline}}{vertical separator. Default is nothing for booktabs
 tables but "|" for normal tables.}
     \item{\code{toprule}}{toprule. Default is hline for normal table but toprule for
