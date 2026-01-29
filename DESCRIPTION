@@ -1,0 +1,56 @@
+Package: ajtools
+Title: AJ's R Tools
+Version: 1.2.0
+Authors@R: 
+    person(given = "Adam",
+           family = "Johnson",
+           role = c("aut", "cre"),
+           email = "sealant.06.sirloin@icloud.com")
+Description: A collection of R functions, tools, and ggplots.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports: 
+    arrow,
+    curl,
+    dplyr,
+    flextable,
+    ggplot2,
+    ggrepel,
+    ggsci,
+    grDevices,
+    gridExtra,
+    gtable,
+    htmltools,
+    httr,
+    jsonlite,
+    kableExtra,
+    knitr,
+    magrittr,
+    Matrix,
+    officer,
+    openxlsx,
+    patchwork,
+    purrr,
+    RColorBrewer,
+    Rcpp,
+    RcppProgress (>= 0.4.2),
+    readr,
+    rlang,
+    scales,
+    stringr,
+    tibble,
+    tidyr,
+    tidyselect,
+    xfun
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Config/testthat/parallel: true
+Enhances: 
+    survminer
+LinkingTo: 
+    Rcpp, RcppProgress
+Depends: 
+    R (>= 2.10)

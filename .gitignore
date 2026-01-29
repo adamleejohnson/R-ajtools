@@ -1,0 +1,58 @@
+.DS_Store
+
+# man/*.Rd
+_snaps/
+
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData*
+
+# User-specific files
+.Ruserdata
+
+# Output files from R CMDa check
+/*.Rcheck/
+
+# RStudio files
+.Rproj.user/
+dev/
+data-raw/
+
+# iCloud
+*.icloud
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
