@@ -28,7 +28,7 @@ ggsurvplot_patchwork <- function(fit,
     axis.title.x = element_text(margin = margin(t = 6)),
     axis.title.y = element_text(margin = margin(r = -unit(90 + axis.title.y.nudge, "lines"))),
     axis.text = element_text(size = rel(1)),
-    legend.position = legend,
+    legend.position = opts$legend,
     legend.background = element_rect(fill = NA),
     legend.text = element_text(size = rel(1))
   )
